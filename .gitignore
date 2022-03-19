@@ -1,3 +1,13 @@
+# MACOS
+.DS_Store
+*.dSYM
+data
+
+#general
+bin
+.vscode
+
+
 # Prerequisites
 *.d
 
