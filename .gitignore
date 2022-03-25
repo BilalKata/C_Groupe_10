@@ -6,6 +6,8 @@ data
 #general
 bin
 .vscode
+.env
+docker-compose.yml
 
 
 # Prerequisites
