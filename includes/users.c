@@ -14,13 +14,35 @@ unsigned short createNewUser(char *username, char *path, char *encryptedPassword
             fprintf(file, "\n%s %s", username, encryptedPassword);
             retour = 1;
         }
-    }
-    else{
+    }else{
         strcpy(erreur, "ERREUR: Le fichier n as pas ete ouvert");
         retour = 0;
     }
     fclose(file);
     return retour;
+}
+
+void encryptPassword(char *password){
+    unsigned length = strlen(password);
+    char encryptedPassword[length];
+    char currentChar;
+    for (int i = 0; i <= length; i++) {
+        currentChar=password[i];
+        if (i%3==0){
+            //changement de valeur du bit en fonction de la position du bit
+            currentChar ^= 0x20;
+            currentChar ^= 0x10;
+            currentChar ^= 0x2;
+        } else if (i%2==0){
+            //Codage asymetrique
+            currentChar ^= 0x5;
+        } else{
+            //swap sur 4 bit
+            currentChar = ((currentChar & 0xf0) >> 4) | ((currentChar & 0x0f) << 4);
+        }
+        encryptedPassword[i] = currentChar;
+    }
+    strcpy(password, encryptedPassword);
 }
 
 unsigned short userExist(char *username, char *path, char *erreur){

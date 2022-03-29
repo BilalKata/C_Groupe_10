@@ -3,6 +3,7 @@
 #include "../includes/users.h"
 
 static char erreur[255];
+char password[]="atome";
 char path[100]="../ressources/users.txt";
 
 void createTest_user_deja_existant(void){
@@ -29,6 +30,11 @@ void userExist_user_fichier_non_ouvert(void){
     TEST_ASSERT_EQUAL_STRING("ERREUR: Le fichier n as pas ete ouvert", erreur);
 }
 
+void cryptPassword_users(void){
+    encryptPassword(password);
+    TEST_ASSERT_EQUAL_STRING("SGj_`", password);
+}
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(createTest_user_deja_existant);
@@ -37,6 +43,7 @@ int main(void) {
     RUN_TEST(userExist_user_existe);
     RUN_TEST(userExist_user_existe_pas);
     RUN_TEST(userExist_user_fichier_non_ouvert);
+    RUN_TEST(cryptPassword_users);
     UNITY_END();
     return 0;
 }
