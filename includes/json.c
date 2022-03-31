@@ -21,6 +21,7 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
     
     if (trouve != 0) {
         strcpy(messageErreur, "ERREUR: Attribut non trouve\n");
+        free(chaine);
         return 0;
     }
 
@@ -31,10 +32,12 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
 
     if (strlen(valeur) >= dim) {
         strcpy(messageErreur, "ERREUR: La taille de la valeur est trop grande\n");
+        free(chaine);
         return 0;
     }
     
     strcpy(resultat, valeur);
+    free(chaine);
     return 1;
 }
 
@@ -56,6 +59,7 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
     
     if (trouve != 0) {
         strcpy(messageErreur, "ERREUR: Attribut non trouve\n");
+        free(chaine);
         return 0;
     }
 
@@ -74,6 +78,7 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
 
     if (nbrElement > *nbElements) {
         strcpy(messageErreur, "ERREUR: Nombre d'elements superieur à la valeur demander\n");
+        free(chaine);
         return 0;
     }
 
@@ -91,6 +96,6 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
                 strncat(valeur, &tableau[i], 1);
         }
     }
-    
+    free(chaine);
     return 1;
 }
