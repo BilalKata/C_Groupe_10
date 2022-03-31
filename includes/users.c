@@ -11,6 +11,7 @@ unsigned short createNewUser(char *username, char *path, char *encryptedPassword
             strcpy(erreur, "ERREUR: Le nom d utilisateur existe deja");
             retour = 0;
         } else {
+		    strcat(encryptedPassword,"                                   ");
             fprintf(file, "\n%s %s", username, encryptedPassword);
             retour = 1;
         }
@@ -67,4 +68,39 @@ unsigned short userExist(char *username, char *path, char *erreur){
     return retour;
 }
 
+unsigned updateUsername(char *oldUsername, char *password, char *path, char *newUsername, char *erreur){
 
+    char filePassword[50];
+    char fileUsername[50];
+    int retour;
+
+    FILE* file = fopen(path, "r+");
+
+    if (file == NULL){
+        strcpy(erreur, "ERREUR: Le fichier n as pas ete ouvert");
+        retour=0;
+    }
+
+    if (userExist(newUsername, path, erreur)==0){
+        while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+            if (strcmp(fileUsername, oldUsername) == 0) {
+                if(strcmp(filePassword, password)==0){
+                    fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
+                    fprintf(file, "%s %s", newUsername, filePassword);
+                    retour=1;
+                    break;
+                } else{
+                    strcpy(erreur, "ERREUR: Mauvais mot de passe");
+                    retour=2;
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        strcpy(erreur, "ERREUR: Nom d'utilisateur deja pris");
+        retour=4;
+    }
+    fclose(file);
+    return retour;
+}

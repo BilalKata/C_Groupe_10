@@ -35,15 +35,32 @@ void cryptPassword_users(void){
     TEST_ASSERT_EQUAL_STRING("SGj_`", password);
 }
 
+void updateUser_succes(void){
+    TEST_ASSERT_EQUAL_UINT(1, updateUsername("test","test","../ressources/users.txt","test2",erreur));
+}
+
+void updateUser_failPassword(void){
+    TEST_ASSERT_EQUAL_UINT(2, updateUsername("test2","test2","../ressources/users.txt","test3",erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais mot de passe", erreur);
+}
+
+void updateUser_failUsedName(void){
+    TEST_ASSERT_EQUAL_UINT(4, updateUsername("test2","test","../ressources/users.txt","admin",erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Nom d'utilisateur deja pris", erreur);
+}
+
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(createTest_user_deja_existant);
-    RUN_TEST(createTest_user_fichier_non_ouvert);
-    RUN_TEST(createTest_user_creation_succes);
-    RUN_TEST(userExist_user_existe);
-    RUN_TEST(userExist_user_existe_pas);
-    RUN_TEST(userExist_user_fichier_non_ouvert);
-    RUN_TEST(cryptPassword_users);
+    //RUN_TEST(createTest_user_deja_existant);
+    //RUN_TEST(createTest_user_fichier_non_ouvert);
+    //RUN_TEST(createTest_user_creation_succes);
+    //RUN_TEST(userExist_user_existe);
+    //RUN_TEST(userExist_user_existe_pas);
+    //RUN_TEST(userExist_user_fichier_non_ouvert);
+    //RUN_TEST(cryptPassword_users);
+    RUN_TEST(updateUser_succes);
+    RUN_TEST(updateUser_failPassword);
+    RUN_TEST(updateUser_failUsedName);
     UNITY_END();
     return 0;
 }
