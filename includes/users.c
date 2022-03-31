@@ -104,3 +104,34 @@ unsigned updateUsername(char *oldUsername, char *password, char *path, char *new
     fclose(file);
     return retour;
 }
+
+unsigned updatePassword(char *username, char *oldPassword, char *path, char *newPassword, char *erreur){
+
+    char filePassword[50];
+    char fileUsername[50];
+    int retour;
+
+    FILE* file = fopen(path, "r+");
+
+    if (file == NULL){
+        strcpy(erreur, "ERREUR: Le fichier n as pas ete ouvert");
+        retour=0;
+    }
+
+    while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+        if (strcmp(fileUsername, username) == 0) {
+            if(strcmp(filePassword, oldPassword)==0){
+                fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
+                fprintf(file, "%s %s", username, newPassword);
+                retour=1;
+                break;
+            } else{
+                strcpy(erreur, "ERREUR: Mauvais mot de passe");
+                retour=2;
+                break;
+            }
+        }
+    }
+    fclose(file);
+    return retour;
+}
