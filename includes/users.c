@@ -58,7 +58,7 @@ void encryptPassword(char *password){
     unsigned length = strlen(password);
     char encryptedPassword[length];
     char currentChar;
-    for (int i = 0; i <= length; i++) {
+    for (int i = 0; i <= length-1; i++) {
         currentChar=password[i];
         if (i%3==0){
             //changement de valeur du bit en fonction de la position du bit
@@ -72,6 +72,9 @@ void encryptPassword(char *password){
             //swap sur 4 bit
             currentChar = ((currentChar & 0xf0) >> 4) | ((currentChar & 0x0f) << 4);
         }
+        currentChar = currentChar | 0x40;
+        currentChar = currentChar | 0x80;
+        currentChar = currentChar & 0xFE;//permet d'eviter les caracteres speciaux en debut de table ascii et delete
         encryptedPassword[i] = currentChar;
     }
     strcpy(password, encryptedPassword);
