@@ -53,7 +53,7 @@ void userExist_user_fichier_non_ouvert(void){
 void cryptPassword_users(void){
     setup();
     encryptPassword(password);
-    TEST_ASSERT_EQUAL_STRING("RFj^`\x7F", password);
+    TEST_ASSERT_EQUAL_STRING("RFj^`@", password);
 }
 
 void updateUser_succes(void){

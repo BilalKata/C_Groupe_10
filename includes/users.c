@@ -57,7 +57,7 @@ void encryptPassword(char *password){
     unsigned length = strlen(password);
     char encryptedPassword[length];
     char currentChar;
-    for (int i = 0; i <= length-1; i++) {
+    for (int i = 0; i <= length; i++) {
         currentChar=password[i];
         if (i%3==0){
             //changement de valeur du bit en fonction de la position du bit
