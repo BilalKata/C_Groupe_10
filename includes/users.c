@@ -42,8 +42,7 @@ unsigned short createNewUser(char *username, char *path, char *encryptedPassword
             strcpy(erreur, "ERREUR: Le nom d utilisateur existe deja");
             retour = 0;
         } else {
-		    strcat(encryptedPassword,"                                   ");
-            fprintf(file, "\n%s %s", username, encryptedPassword);
+            fprintf(file, "\n%s %s                     ", username, encryptedPassword);
             retour = 1;
         }
     }else{
@@ -73,7 +72,7 @@ void encryptPassword(char *password){
             currentChar = ((currentChar & 0xf0) >> 4) | ((currentChar & 0x0f) << 4);
         }
         currentChar = currentChar | 0x40;
-        currentChar = currentChar | 0x80;
+        currentChar = currentChar & 0x7F;
         currentChar = currentChar & 0xFE;//permet d'eviter les caracteres speciaux en debut de table ascii et delete
         encryptedPassword[i] = currentChar;
     }
