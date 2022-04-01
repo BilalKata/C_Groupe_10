@@ -7,11 +7,13 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
 
     const char *separateurs = " :{}\"";
     int trouve = -1;
-    char* chaine = (char *) malloc(sizeof(char) * (strlen(chaineJson) + 1));
+    char* chainecle = (char *) malloc(sizeof(char) * (strlen(chaineJson) + 1));
+    char* chainevaleur = (char *) malloc(sizeof(char) * (strlen(chaineJson) + 1));
     
-    strcpy(chaine, chaineJson);
+    strcpy(chainecle, chaineJson);
+    strcpy(chainevaleur, chaineJson);
 
-    char *cle = strtok (chaineJson,separateurs);
+    char *cle = strtok (chainecle,separateurs);
 
     while (cle != NULL) { 
         trouve = strcmp(cle, nomAttribut);
@@ -21,23 +23,26 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
     
     if (trouve != 0) {
         strcpy(messageErreur, "ERREUR: Attribut non trouve\n");
-        free(chaine);
+        free(chainecle);
+        free(chainevaleur);
         return 0;
     }
 
-    char* valeur = strstr(chaine, cle);
+    char* valeur = strstr(chainevaleur, cle);
     valeur = strtok (valeur,",");
     valeur = valeur + strlen(cle);
     valeur = strtok (valeur," :{}\"");
 
     if (strlen(valeur) >= dim) {
         strcpy(messageErreur, "ERREUR: La taille de la valeur est trop grande\n");
-        free(chaine);
+        free(chainecle);
+        free(chainevaleur);
         return 0;
     }
     
     strcpy(resultat, valeur);
-    free(chaine);
+    free(chainecle);
+    free(chainevaleur);
     return 1;
 }
 
