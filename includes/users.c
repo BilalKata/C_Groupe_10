@@ -3,6 +3,37 @@
 #include <stdlib.h>
 #include <string.h>
 
+unsigned authenticateUser(char *username, char *password, char *path, char *erreur){
+    unsigned short retour = 0;
+    char fileUsername[50];
+    char filePassword[50];
+    FILE *file = fopen(path, "r");
+    if (file != NULL) {
+        while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+            if (strcmp(fileUsername, username) == 0) {
+                if(strcmp(filePassword, password)==0){
+                    retour=1;
+                    break;
+                } else{
+                    strcpy(erreur, "ERREUR: Mauvais identifiant de connexion");
+                    retour=2;
+                    break;
+                }
+            }
+        }
+            if (retour != 1 && retour != 2){
+                    strcpy(erreur, "ERREUR: Mauvais identifiant de connexion");
+                    retour=3;
+                    
+                }
+    }else{
+        strcpy(erreur, "ERREUR: Le fichier n as pas ete ouvert");
+        retour = 0;
+    }
+    fclose(file);
+    return retour;
+}
+
 unsigned short createNewUser(char *username, char *path, char *encryptedPassword, char *erreur){
     unsigned short retour = 0;
     FILE *file = fopen(path, "a");

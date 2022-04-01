@@ -69,6 +69,20 @@ void deleteUser_failPassword(void){
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais mot de passe", erreur);
 }
 
+void authUser_succes(void){
+    TEST_ASSERT_EQUAL_UINT(1, authenticateUser("test2", "kjkljs", "../ressources/users.txt", erreur));
+}
+
+void authUser_failPassword(void){
+    TEST_ASSERT_EQUAL_UINT(2, authenticateUser("test2", "hjdsdkq", "../ressources/users.txt", erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais identifiant de connexion", erreur);
+}
+
+void authUser_failUsername(void){
+    TEST_ASSERT_EQUAL_UINT(3, authenticateUser("adsqkjld", "admin", "../ressources/users.txt", erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais identifiant de connexion", erreur);
+}
+
 int main(void) {
     UNITY_BEGIN();
     //RUN_TEST(createTest_user_deja_existant);
@@ -83,8 +97,11 @@ int main(void) {
     //RUN_TEST(updateUser_failUsedName);
     //RUN_TEST(updatePassword_succes);
     //RUN_TEST(updatePassword_failPassword);
-    RUN_TEST(deleteUser_succes);
-    RUN_TEST(deleteUser_failPassword);
+    //RUN_TEST(deleteUser_succes);
+    //RUN_TEST(deleteUser_failPassword);
+    RUN_TEST(authUser_succes);
+    RUN_TEST(authUser_failPassword);
+    RUN_TEST(authUser_failUsername);
 
     UNITY_END();
     return 0;
