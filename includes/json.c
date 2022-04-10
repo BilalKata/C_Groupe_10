@@ -31,7 +31,7 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
     char* valeur = strstr(chainevaleur, cle);
     valeur = strtok (valeur,",");
     valeur = valeur + strlen(cle);
-    valeur = strtok (valeur," :{}\"");
+    valeur = strtok (valeur,":{}\"");
 
     if (strlen(valeur) >= dim) {
         strcpy(messageErreur, "ERREUR: La taille de la valeur est trop grande\n");
