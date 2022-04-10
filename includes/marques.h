@@ -16,5 +16,6 @@ typedef struct marque {
 
 unsigned creationTableMarque(MYSQL *connexion, char *erreur);
 unsigned insertMarque(MYSQL *connexion, Marque *marque, char *erreur);
+unsigned ajoutDesMarque(MYSQL* connexion, char *chemin_fichier, char *erreur);
 
 #endif
