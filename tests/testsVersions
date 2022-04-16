@@ -1,0 +1,14 @@
+#include <string.h>
+#include "../unity/unity.h"
+#include "../includes/versions.h"
+#include "../includes/connexion.h"
+
+static char erreur[255];
+
+void createTabletest_succes(){
+    TEST_ASSERT_EQUAL_UINT8(1, createTableVersion(connexion, erreur));
+}
+void createTabletest_impossible(){
+    TEST_ASSERT_EQUAL_UINT8(0, createTableVersion(connexion, erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Impossible de creer la table version\n", erreur);
+}
