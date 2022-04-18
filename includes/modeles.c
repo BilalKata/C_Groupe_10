@@ -11,7 +11,7 @@ void cloturerConnexion();
 void creerTables();
 void remplirTables();
 void trouver();
-void extraire(char *ligne,char *resultatId,char *resultatName,char *resultatNiceName);
+void extraire(char *ligne, char *resultatId, char *resultatName, char *resultatNiceName);
 void garnir(char *id, char *name, char *nicename);
 
 int main(void)
@@ -21,31 +21,32 @@ int main(void)
 
 MYSQL *connect = NULL;
 
-void extraire(char *ligne,char *resultatId,char *resultatName,char *resultatNiceName)
+void extraire(char *ligne, char *resultatId, char *resultatName, char *resultatNiceName)
 {
   int captureid = 0;
   int captureName = 0;
   int captureNiceName = 0;
+  
 
   for (int a = 0; a < strlen(ligne); a++)
   {
 
-    if (ligne[a] == 'i' && ligne[a + 1] == 'd' && ligne[a + 2] == '"' && ligne[a + 3] == ':' && ligne[a+4] == '"' && ligne[a+5] != '2')
+    if (ligne[a] == 'i' && ligne[a + 1] == 'd' && ligne[a + 2] == '"' && ligne[a + 3] == ':' && ligne[a + 4] == '"' && ligne[a + 5] != '2')
     {
       a = a + 5;
       captureid = 0;
 
       while (ligne[a] != '"')
       {
-          resultatId[captureid] = ligne[a];
-          a++;
-          captureid++;
-          if (ligne[a] == '"')
-          {
-            resultatId[captureid] = '\0';
-          }
+        resultatId[captureid] = ligne[a];
+        a++;
+        captureid++;
+        if (ligne[a] == '"')
+        {
+          resultatId[captureid] = '\0';
+        }
       }
-      printf("%s\n", resultatId);
+       //printf("%s\n", resultatId);
     }
 
     if (ligne[a] == 'n' && ligne[a + 1] == 'a' && ligne[a + 2] == 'm' && ligne[a + 3] == 'e')
@@ -58,16 +59,17 @@ void extraire(char *ligne,char *resultatId,char *resultatName,char *resultatNice
       }
       while (ligne[a] != '\"')
       {
-        resultatName[captureName] = ligne[a];
-        a++;
-        captureName++;
+          resultatName[captureName] = ligne[a];
+          a++;
+          captureName++;
 
-        if (ligne[a] == '\"')
-        {
-          resultatName[captureName] = '\0';
-        }
+          if (ligne[a] == '\"')
+          {
+            resultatName[captureName] = '\0';
+          }
+        
       }
-      printf("%s\n",resultatName);
+      //printf("%s\n", resultatName);
     }
 
     if (ligne[a] == 'n' && ligne[a + 1] == 'i' && ligne[a + 2] == 'c' && ligne[a + 3] == 'e' && ligne[a + 4] == 'N' && ligne[a + 5] == 'a' && ligne[a + 6] == 'm' && ligne[a + 7] == 'e')
@@ -89,7 +91,7 @@ void extraire(char *ligne,char *resultatId,char *resultatName,char *resultatNice
           resultatNiceName[captureNiceName] = '\0';
         }
       }
-      printf("%s\n",resultatNiceName);
+      // printf("%s\n",resultatNiceName);
     }
   }
 }
@@ -100,6 +102,7 @@ void trouver()
   char resultatId[255];
   char resultatName[255];
   char resultatNiceName[255];
+  //char matrice[30][30];
   fichier = fopen("C:\\Users\\abdel\\OneDrive\\Bureau\\C_Groupe_10\\ressources\\marques_modeles.txt", "r");
   if (fichier == NULL)
   {
@@ -110,8 +113,12 @@ void trouver()
 
   while (fgets(chaineJson, 2000, fichier) != NULL) // lire le fichier tant qu'on est pas a la fin
   {
-    extraire(chaineJson,resultatId,resultatName,resultatNiceName);
-    //garnir(resultatId,resultatName,resultatNiceName);
+    extraire(chaineJson, resultatId, resultatName, resultatNiceName);
+    printf("%s %s %s\n", resultatId, resultatName, resultatNiceName);
+    garnir(resultatId,resultatName,resultatNiceName);
+    //strcpy(matrice[0] , resultatName);
+    //printf("%s",matrice[0][0] );
+    
   }
 }
 
@@ -125,7 +132,7 @@ void Connexion(MYSQL *connect)
     exit(EXIT_FAILURE);
   }
 
-  if (!mysql_real_connect(connect, "localhost", "root", NULL, "Voitures", 3306, NULL, 0)) // Si on peut pas se connecter à la db
+  if (!mysql_real_connect(connect, "localhost", "root", NULL, "voiture", 3306, NULL, 0)) // Si on peut pas se connecter à la db
   {
     fprintf(stderr, "%s\n", mysql_error(connect)); // signale une erreur
     exit(EXIT_FAILURE);
@@ -146,7 +153,7 @@ void executerSQL(char *instructionSQL)
 void garnir(char *id, char *name, char *nicename)
 {
   char *inserer = (char *)malloc(1024); // Buffer pour inserer dans la table
-  sprintf(inserer, "INSERT INTO modeles (ID_modele,NAME_Modele , NICENAME_Modele) VALUES ('%s', '%s', '%s')", id, name, nicename);
+  sprintf(inserer, "INSERT INTO modele VALUES (%s, '%s', '%s', 200002038)", id, name, nicename);
   executerSQL(inserer);
 }
 
