@@ -50,6 +50,7 @@ void mysqlInsertStructVersion_impossible(){
 }
 
 void ajoutVersion_succes(){
+    //base de donnee existante
     TEST_ASSERT_EQUAL_UINT8(0, ajoutVersion(connexion, path, erreur));
     mysql_query(connexion, "SELECT * FROM Marque"))
     MYSQL_RES *result = mysql_store_result(connexion);
@@ -65,7 +66,8 @@ void ajoutVersion_succes(){
 
 
 void ajoutVersion_fichierNonOuvert(){
-    TEST_ASSERT_EQUAL_UINT8(1, ajoutVersion(connexion, path, erreur));
+    //base de donnee existante
+    TEST_ASSERT_EQUAL_UINT8(1, ajoutVersion(connexion, "test.txt", erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Fichier non ouvert", erreur);
 }
 

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "versions.h"
+#include "json.h"
 //#include <connexion.h>
 
 
@@ -27,19 +28,18 @@ unsigned createTableVersion(MYSQL *sqlConnection, char *erreur){
 
 unsigned mysqlInsertStructVersion(MYSQL *connexion, Version *version, char *erreur){
     char query[QUERY_LENGHT];
-    sprintf(query, "INSERT INTO Version (id, name, horsepower, modelNiceName) VALUES (%s, '%s', %s, '%s')", version->id , version->name, version->horsepower, version->modelNiceName);
+    sprintf(query, "INSERT INTO Version (id, name, versionPower, modelNiceName) VALUES (%s, '%s', %s, '%s')", version->id , version->name, version->horsepower, version->modelNiceName);
     int retour=1;
-    if(mysql_query(connexion, query){
+    if(mysql_query(connexion, query)){
         erreur="ERREUR: Insertion impossible\n";
         retour=0;
     }
     return retour;
 }
 
-unsigned ajoutVersion(MYSQL connexion, char *path, char *erreur){
+unsigned ajoutVersion(MYSQL *connexion, char *path, char *erreur){
     FILE* file = fopen("../ressources/versions_moteurs.txt", "r");
 
-    char erreur[200];
     unsigned MAX = 5;
     char resultats[MAX][DIM];
     char resultat[MAX];
@@ -61,6 +61,7 @@ unsigned ajoutVersion(MYSQL connexion, char *path, char *erreur){
         while (fscanf(file, "%[^\n]", buffer) != EOF) {
             jsonPrimitive(buffer, "name", resultat, 100, erreur);
             strcpy(version->name, resultat);
+
             strcpy(resultat, "");
             jsonPrimitive(buffer, "modelNiceName", resultat, 100, erreur);
             strcpy(version->modelNiceName, resultat);
@@ -77,6 +78,7 @@ unsigned ajoutVersion(MYSQL connexion, char *path, char *erreur){
             fgetc(file);
             
         }
+        mysqlInsertStructVersion(connexion, version, erreur);
         free(version->modelNiceName);
         free(version->name);
         free(version->horsepower);
