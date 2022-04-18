@@ -39,14 +39,9 @@ unsigned creationTableMarque(MYSQL *connexion, char *erreur) {
  * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
  */
 unsigned insertMarque(MYSQL *connexion, Marque *marque, char *erreur) {
-    char query[QUERY_LENGTH] = "INSERT INTO Marque VALUES (";
-    strcat(query, marque->id);
-    strcat(query, ", '");
-    strcat(query, marque->name);
-    strcat(query, "', '");
-    strcat(query, marque->niceName);
-    strcat(query, "')");
-
+    char query[QUERY_LENGTH];
+    sprintf(query, "INSERT INTO Marque VALUES (%s, '%s', '%s')", marque->id, marque->name, marque->niceName);
+    
     if (mysql_query(connexion, query) != 0) {
         strcpy(erreur, "ERREUR: Impossible de faire l'insertion dans la table marque\n");
         return 0;
