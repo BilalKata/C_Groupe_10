@@ -4,6 +4,9 @@
 #include "../includes/connexion.h"
 
 static char erreur[255];
+static char path[]="";
+MYSQL *connexion;
+connexion = connexion_bd("localhost", "root", "", "voiture", erreur);
 
 void setup(){
     Version *myTestVersion = (Version *) malloc(470);
@@ -46,12 +49,36 @@ void mysqlInsertStructVersion_impossible(){
     clean();
 }
 
+void ajoutVersion_succes(){
+    TEST_ASSERT_EQUAL_UINT8(0, ajoutVersion(connexion, path, erreur));
+    mysql_query(connexion, "SELECT * FROM Marque"))
+    MYSQL_RES *result = mysql_store_result(connexion);
+    MYSQL_ROW row;
+    row = mysql_fetch_row(result);
+    TEST_ASSERT_EQUAL_STRING("200471912", row[0]);
+    TEST_ASSERT_EQUAL_STRING("Technology Package 4dr Sedan (2.0L 4cyl 5A)", row[1]);
+    TEST_ASSERT_EQUAL_STRING("acura", row[2]);
+    TEST_ASSERT_EQUAL_STRING("150", row[3]);
+    mysql_free_result(result);
+}
+
+
+
+void ajoutVersion_fichierNonOuvert(){
+    TEST_ASSERT_EQUAL_UINT8(1, ajoutVersion(connexion, path, erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Fichier non ouvert", erreur);
+}
+
+
 int main(void) {
     UNITY_BEGIN();
     //RUN_TEST(createTabletest_succes);
     //RUN_TEST(createTabletest_impossible);
-    RUN_TEST(mysqlInsertStructVersion_succes);
-    RUN_TEST(mysqlInsertStructVersion_impossible);
+    //RUN_TEST(mysqlInsertStructVersion_succes);
+    //RUN_TEST(mysqlInsertStructVersion_impossible);
+    RUN_TEST(ajoutVersion_fichierNonOuvert);
+    RUN_TEST(ajoutVersion_succes);
+    fermerConnexion(connexion);
     UNITY_END();
     return 0;
 }

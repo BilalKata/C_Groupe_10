@@ -36,4 +36,58 @@ unsigned mysqlInsertStructVersion(MYSQL *connexion, Version *version, char *erre
     return retour;
 }
 
+unsigned ajoutVersion(MYSQL connexion, char *path, char *erreur){
+    FILE* file = fopen("../ressources/versions_moteurs.txt", "r");
+
+    char erreur[200];
+    unsigned MAX = 5;
+    char resultats[MAX][DIM];
+    char resultat[MAX];
+    int retour;
+    if(file == NULL){
+        strcpy(erreur, "ERREUR: Fichier non ouvert");
+        retour=1;
+    } else{
+        Version *version = (Version *) malloc(470);
+        version->id = (char *) malloc(sizeof(char) * 20);
+        version->name = (char *) malloc(sizeof(char) * 150);
+        version->horsepower = (char *) malloc(sizeof(char) * 150);
+        version->modelNiceName = (char *) malloc(sizeof(char) * 150);
+
+        size_t buffer_size = 300;
+        char* buffer = (char*) malloc(buffer_size);
+        
+        int ligne=1;
+        while (fscanf(file, "%[^\n]", buffer) != EOF) {
+            jsonPrimitive(buffer, "name", resultat, 100, erreur);
+            strcpy(version->name, resultat);
+            strcpy(resultat, "");
+            jsonPrimitive(buffer, "modelNiceName", resultat, 100, erreur);
+            strcpy(version->modelNiceName, resultat);
+            strcpy(resultat, "");
+            jsonPrimitive(buffer, "id", resultat, 100, erreur);
+            strcpy(version->id, resultat);
+            if (jsonArray(buffer, "engine", resultats, &MAX, erreur) == 1) {
+                strcpy(resultat, "");
+                jsonPrimitive(resultats[3], "horsepower", resultat, 10, erreur);
+                strcpy(version->horsepower, resultat);
+            }
+            strcpy(buffer, "");
+            strcpy(resultat, "");
+            fgetc(file);
+            
+        }
+        free(version->modelNiceName);
+        free(version->name);
+        free(version->horsepower);
+        free(version->id);
+        free(version);
+        free(buffer);
+        retour=0;
+    }
+    fclose(file);
+    return retour;
+}
+
+
 
