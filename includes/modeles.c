@@ -14,11 +14,6 @@ void trouver();
 void extraire(char *ligne, char *resultatId, char *resultatName, char *resultatNiceName);
 void garnir(char *id, char *name, char *nicename);
 
-int main(void)
-{
-  trouver();
-}
-
 MYSQL *connect = NULL;
 
 void extraire(char *ligne, char *resultatId, char *resultatName, char *resultatNiceName)
