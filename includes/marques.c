@@ -64,8 +64,7 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
     marque->id = (char *) malloc(sizeof(char) * 20);
     marque->name = (char *) malloc(sizeof(char) * 100);
     marque->niceName = (char *) malloc(sizeof(char) * 100);
-    size_t buffer_size = 2048;
-    char *buffer = (char *) malloc(buffer_size);
+    char *buffer = (char *) malloc(sizeof(char) * 2048);
 
     if (fichier == NULL) {
         strcpy(erreur, "ERREUR: Impossible d'ouvrir le fichier\n");
@@ -78,7 +77,7 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
         return 0;
     }
 
-    while (getline(&buffer, &buffer_size, fichier) != EOF) {
+    while (fscanf(fichier, "%[^\n]", buffer) != EOF) {
         // recherche chaque element d une marque et l'inserre
         if (jsonPrimitive(buffer, "id", marque->id, 20, erreur))
             if (jsonPrimitive(buffer, "name", marque->name, 100, erreur))
@@ -90,6 +89,7 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
         strcpy(marque->name, "");
         strcpy(marque->id, "");
         strcpy(buffer, "");
+        fgetc(fichier);
     }
     
     free(marque->niceName);

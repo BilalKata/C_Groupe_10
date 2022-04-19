@@ -3,6 +3,8 @@
 *.dSYM
 data
 
+mod.*
+
 #general
 bin
 .vscode
