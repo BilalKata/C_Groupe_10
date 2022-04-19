@@ -3,7 +3,18 @@
 #include <string.h>
 #include "json.h"
 
-unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, unsigned dim, char *messageErreur) {
+/**
+ * Recherche une cle dans un tableau JSON et retourne la valeur en fontion des restrictions
+ *
+ * \param chaineJson (char *) chaine au format JSON
+ * \param nomAttribut (char *) l attribut rechercher dans la chaine
+ * \param resultat (char *) garnie si l attribut existe
+ * \param dim (unsined) dimension maximale de resultat
+ * \param messageErreur (char *) garnie si une erreur survient
+ * 
+ * \return (unsined) 1 si l attribut a ete trouve et le resultat ne depasse pas dim sinon 0
+ */
+unsigned jsonPrimitive(char *chaineJson, char *nomAttribut, char *resultat, unsigned dim, char *messageErreur) {
 
     const char *separateurs = " :{}\"";
     int trouve = -1;
@@ -46,6 +57,17 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
     return 1;
 }
 
+/**
+ * Recherche un tableau JSON et retourne les elements de celui ci en fontion des restrictions
+ *
+ * \param chaineJson (char *) chaine au format JSON
+ * \param nomAttribut (char *) l attribut rechercher dans la chaine
+ * \param resultats (char **) garnie si l attribut existe
+ * \param nbElements (unsined *) nombre d'elelement maximum dans le taleau
+ * \param messageErreur (char *) garnie si une erreur survient
+ * 
+ * \return (unsined) 1 si le tableau a ete trouve et le nombre d element ne depasse pas nbElements sinon 0
+ */
 unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], unsigned *nbElements, char *messageErreur) {
 
     const char *separateurs = " ,():{}\"";
@@ -69,38 +91,43 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
     }
 
     char* tableau = strstr(chaine, cle);
-    tableau = strstr(tableau, "{");
+    tableau = strstr(tableau, "[");
     tableau += 2;
-    char* finTableau = strchr(tableau, '}');
+    char* finTableau = strchr(tableau, ']');
     *(finTableau) = '\0';
     
     int nbrElement = 0;
     for (int i = 0; i < strlen(tableau); i++) {
-        if (tableau[i] == ',') 
+        if (tableau[i] == '}') 
             nbrElement++;
     }
-    nbrElement++;
 
     if (nbrElement > *nbElements) {
         strcpy(messageErreur, "ERREUR: Nombre d'elements superieur à la valeur demander\n");
         free(chaine);
         return 0;
     }
-
+    *nbElements = nbrElement;
+    
     unsigned courant = 0;
     unsigned taille = strlen(tableau);
-    char valeur[50];
+    char valeur[DIM];
     strcpy(valeur, "");
+    strncat(valeur, "{", 1);
     for (unsigned i = 0; i < taille; i++) {
-        if (tableau[i] == ',' || i == taille - 1) {
+        if (tableau[i] == '}') {
+            strncat(valeur, &tableau[i], 1);
+            strncat(valeur, "\0", 1);
             strcpy(&(resultats[courant][0]), valeur);
             strcpy(valeur, "");
             courant++;
         } else {
-            if (tableau[i] != '"') 
+            if (tableau[i+1] != '{')
                 strncat(valeur, &tableau[i], 1);
         }
     }
+
+    
     free(chaine);
     return 1;
 }
