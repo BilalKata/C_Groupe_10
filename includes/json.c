@@ -31,7 +31,7 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
     char* valeur = strstr(chainevaleur, cle);
     valeur = strtok (valeur,",");
     valeur = valeur + strlen(cle);
-    valeur = strtok (valeur," :{}\"");
+    valeur = strtok (valeur,":{}\"");
 
     if (strlen(valeur) >= dim) {
         strcpy(messageErreur, "ERREUR: La taille de la valeur est trop grande\n");
@@ -48,7 +48,7 @@ unsigned jsonPrimitive( char *chaineJson, char *nomAttribut, char *resultat, uns
 
 unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], unsigned *nbElements, char *messageErreur) {
 
-    const char *separateurs = " :{}\"";
+    const char *separateurs = " ,():{}\"";
     int trouve = -1;
     char* chaine = (char *) malloc(sizeof(char) * (strlen(chaineJson) + 1));
     
@@ -69,9 +69,9 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
     }
 
     char* tableau = strstr(chaine, cle);
-    tableau = strstr(chaine, "[");
-    tableau = tableau + 1;
-    char* finTableau = strchr(tableau, ']');
+    tableau = strstr(tableau, "{");
+    tableau += 2;
+    char* finTableau = strchr(tableau, '}');
     *(finTableau) = '\0';
     
     int nbrElement = 0;
