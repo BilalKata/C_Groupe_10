@@ -38,24 +38,24 @@ void clear(void) {
 }
 
 void test_creation_table(void) {
-    TEST_ASSERT_EQUAL_UINT(1, creationTableMarque(connexion, erreur));
+    TEST_ASSERT_EQUAL_UINT(1, createTableMarque(connexion, erreur));
 }
 
 // impossible de creer la table 2 fois car elle existe deja
 void test_table_existe(void) {
-    creationTableMarque(connexion, erreur);
-    TEST_ASSERT_EQUAL_UINT(0, creationTableMarque(connexion, erreur));
+    createTableMarque(connexion, erreur);
+    TEST_ASSERT_EQUAL_UINT(0, createTableMarque(connexion, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Impossible de creer la table marques\n", erreur);
 }
 
 void test_insertion_reussie(void) {
-    creationTableMarque(connexion, erreur);
+    createTableMarque(connexion, erreur);
     TEST_ASSERT_EQUAL_UINT(1, insertMarque(connexion, marque, erreur));
 }
 
 // impossible d'avoir 2 fois la meme marque
 void test_insertion_non_reussie(void) {
-    creationTableMarque(connexion, erreur);
+    createTableMarque(connexion, erreur);
     insertMarque(connexion, marque, erreur);
     insertMarque(connexion, marque, erreur);
     TEST_ASSERT_EQUAL_STRING("ERREUR: Impossible de faire l'insertion dans la table marque\n", erreur);
@@ -63,15 +63,15 @@ void test_insertion_non_reussie(void) {
 
 void test_insertion_avec_fichier(void) {
     strcpy(path, "../ressources/marques_modeles.txt");
-    creationTableMarque(connexion, erreur);
-    TEST_ASSERT_EQUAL_UINT(1, ajoutDesMarque(connexion, path, erreur));
+    createTableMarque(connexion, erreur);
+    TEST_ASSERT_EQUAL_UINT(1, addMarques(connexion, path, erreur));
 }
 
 void test_trouver_un_element(void) {
     strcpy(path, "../ressources/marques_modeles.txt");
     strcpy(query, "SELECT * FROM Marque WHERE id = 200002305");
-    creationTableMarque(connexion, erreur);
-    ajoutDesMarque(connexion, path, erreur);
+    createTableMarque(connexion, erreur);
+    addMarques(connexion, path, erreur);
     mysql_query(connexion, query);
     row = mysql_fetch_row(mysql_store_result(connexion));
     TEST_ASSERT_EQUAL_STRING("200002305", row[0]);
@@ -81,8 +81,8 @@ void test_trouver_un_element(void) {
 
 void test_insertion_avec_info_manquante(void) {
     strcpy(path, "../ressources/versions_moteurs.txt");
-    creationTableMarque(connexion, erreur);
-    TEST_ASSERT_EQUAL_UINT(0, ajoutDesMarque(connexion, path, erreur));
+    createTableMarque(connexion, erreur);
+    TEST_ASSERT_EQUAL_UINT(0, addMarques(connexion, path, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Attribut non trouve\n", erreur);
 }
 

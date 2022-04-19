@@ -1,8 +1,7 @@
 #ifndef VERSIONS_H
 #define VERSIONS_H
 
-#define QUERY_LENGHT 1000
-#define DIM2 60
+#define QUERY_LENGHT 255
 
 typedef struct {
     char *id;
@@ -11,8 +10,8 @@ typedef struct {
     char *modelNiceName;
 } Version;
 
-unsigned createTableVersion(MYSQL *sqlConnection, char *erreur);
-unsigned mysqlInsertStructVersion(MYSQL *connexion, Version *version, char *erreur);
-unsigned ajoutVersion(MYSQL *connexion, char *path, char *erreur);
+unsigned createTableVersion(MYSQL *connexion, char *erreur);
+unsigned insertVersion(MYSQL *connexion, Version *version, char *erreur);
+unsigned addVersions(MYSQL *connexion, char *path, char *erreur);
 
 #endif

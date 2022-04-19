@@ -13,14 +13,13 @@
  * 
  * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
  */
-unsigned creationTableMarque(MYSQL *connexion, char *erreur) {
-    char query[] = "                            \
-                CREATE TABLE Marque(            \
-                id INT UNSIGNED,                \
-                name VARCHAR(50) NOT NULL,      \
-                niceName VARCHAR(50) NOT NULL,  \
-                PRIMARY KEY(id),                \
-                UNIQUE(name))";
+unsigned createTableMarque(MYSQL *connexion, char *erreur) {
+    char query[] = "CREATE TABLE Marque(            \
+                    id INT UNSIGNED,                \
+                    name VARCHAR(50) NOT NULL,      \
+                    niceName VARCHAR(50) NOT NULL,  \
+                    PRIMARY KEY(id),                \
+                    UNIQUE(name))";
 
     if (mysql_query(connexion, query)) {
         strcpy(erreur, "ERREUR: Impossible de creer la table marques\n");
@@ -59,8 +58,8 @@ unsigned insertMarque(MYSQL *connexion, Marque *marque, char *erreur) {
  * 
  * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
  */
-unsigned ajoutDesMarque(MYSQL* connexion, char *chemin_fichier, char *erreur) {
-    FILE* fichier = fopen(chemin_fichier, "r");
+unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
+    FILE* fichier = fopen(path, "r");
     Marque *marque = (Marque *) malloc((sizeof(char) * 20) + (sizeof(char) * 100) + (sizeof(char) * 100));
     marque->id = (char *) malloc(sizeof(char) * 20);
     marque->name = (char *) malloc(sizeof(char) * 100);
