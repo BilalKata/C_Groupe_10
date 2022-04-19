@@ -41,11 +41,11 @@ void mysqlInsertStructVersion_succes(){
     free(myTestVersion->id);
     free(myTestVersion);
     fermerConnexion(connexion);
-    clean();
+    
 }
 
 void mysqlInsertStructVersion_impossible(){
-    setup();
+    
     connexion = connexion_bd("localhost", "root", "", "voiture", erreur);
     Version *myTestVersion = (Version *) malloc(470);
     myTestVersion->id = (char *) malloc(sizeof(char) * 20);
@@ -64,7 +64,7 @@ void mysqlInsertStructVersion_impossible(){
     free(myTestVersion->id);
     free(myTestVersion);
     fermerConnexion(connexion);
-    clean();
+    
 }
 
 void ajoutVersion_succes(){
