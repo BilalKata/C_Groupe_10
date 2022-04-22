@@ -8,12 +8,16 @@
 char erreur[200];
 char query[50];
 char path[50];
+char  marques[40][NAME_LENGTH];
+unsigned nbr_element;
 MYSQL *connexion;
 Marque *marque;
 MYSQL_ROW row;
 
 void setup(void) {
     connexion = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
+    mysql_query(connexion, "DROP TABLE Version");
+    mysql_query(connexion, "DROP TABLE Modele");
     mysql_query(connexion, "DROP TABLE Marque");
         
     marque = (Marque *) malloc(30);
@@ -27,6 +31,8 @@ void setup(void) {
     strcpy(marque->id, "2000");
     strcpy(marque->name, "Mercedes");
     strcpy(marque->niceName, "mercedes");
+    strcpy(path, "../ressources/marques_modeles.txt");
+
 }
 
 void clear(void) {
@@ -62,13 +68,11 @@ void test_insertion_non_reussie(void) {
 }
 
 void test_insertion_avec_fichier(void) {
-    strcpy(path, "../ressources/marques_modeles.txt");
     createTableMarque(connexion, erreur);
     TEST_ASSERT_EQUAL_UINT(1, addMarques(connexion, path, erreur));
 }
 
 void test_trouver_un_element(void) {
-    strcpy(path, "../ressources/marques_modeles.txt");
     strcpy(query, "SELECT * FROM Marque WHERE id = 200002305");
     createTableMarque(connexion, erreur);
     addMarques(connexion, path, erreur);
@@ -84,6 +88,14 @@ void test_insertion_avec_info_manquante(void) {
     createTableMarque(connexion, erreur);
     TEST_ASSERT_EQUAL_UINT(0, addMarques(connexion, path, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Attribut non trouve\n", erreur);
+}
+
+void test_select_reussie(void) {
+    const char result[40][20] = {"Acura","Aston Martin","Audi","Bentley","BMW","Buick","Cadillac","Chevrolet","Chrysler","Dodge","Ferrari","FIAT","Ford","GMC","Honda","Hyundai","Infiniti","Jaguar","Jeep","Kia","Lamborghini","Land Rover","Lexus","Lincoln","Lotus","Maserati","Mazda","Mercedes-Benz","MINI","Mitsubishi","Nissan","Porsche","Ram","Rolls-Royce","Scion","Subaru","Tesla","Toyota","Volkswagen","Volvo"};
+    createTableMarque(connexion, erreur);
+    addMarques(connexion, path, erreur);
+    TEST_ASSERT_EQUAL_UINT(1, selectMarques(connexion, marques, &nbr_element, erreur));
+    TEST_ASSERT_EQUAL_STRING_ARRAY(result, marques, 40);
 }
 
 int main(void) {
@@ -102,6 +114,8 @@ int main(void) {
     RUN_TEST(test_trouver_un_element);
     setup();
     RUN_TEST(test_insertion_avec_info_manquante);
+    setup();
+    RUN_TEST(test_select_reussie);
     clear();
     UNITY_END();
     return 0;

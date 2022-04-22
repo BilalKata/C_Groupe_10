@@ -104,3 +104,42 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
    
     return 1;
 }
+
+/**
+ * Insere la marque donnee dans la bd
+ *
+ * \param connexion (MYSQL *) connextion a la base de donnee
+ * \param marques (Marque []) un tableau de marque 
+ * \param erreur (char *) garnie si une erreur survient
+ * 
+ * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
+ */
+unsigned selectMarques(MYSQL *connexion, char marques[][NAME_LENGTH], unsigned *nbr_element, char *erreur) {
+    MYSQL_ROW row;
+    MYSQL_RES *results; 
+    unsigned i = 0;
+    char query[QUERY_LENGTH];
+    strcpy(query, "SELECT name FROM Marque ORDER BY name ASC");
+    
+    if (mysql_query(connexion, query) != 0) {
+        strcpy(erreur, "ERREUR: Impossible de faire la selection de la table marque\n");
+        return 0;
+    }
+
+    results = mysql_store_result(connexion);
+
+    if (results == NULL) {
+        strcpy(erreur, "ERREUR: Impossible de recevoir la table marque\n");
+        mysql_free_result(results);
+        return 0;
+    }
+    
+    while ((row = mysql_fetch_row(results))){
+        strcpy(&(marques[i][0]),row[0]);
+        i++;
+    }
+    *nbr_element = i;
+
+    mysql_free_result(results);
+    return 1;
+}

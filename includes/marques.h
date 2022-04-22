@@ -2,6 +2,7 @@
 #define MARQUES_H
 
 #define     QUERY_LENGTH    255
+#define     NAME_LENGTH     50
 
 /**
  * Represente une marque avec <char *id>, <char *name>, <char* niceName>
@@ -17,5 +18,6 @@ typedef struct marque {
 unsigned createTableMarque(MYSQL *connexion, char *erreur);
 unsigned insertMarque(MYSQL *connexion, Marque *marque, char *erreur);
 unsigned addMarques(MYSQL* connexion, char *path, char *erreur);
+unsigned selectMarques(MYSQL *connexion, char marques[][NAME_LENGTH], unsigned *nbr_element, char *erreur);
 
 #endif
