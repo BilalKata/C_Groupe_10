@@ -13,5 +13,6 @@ typedef struct {
 unsigned createTableVersion(MYSQL *connexion, char *erreur);
 unsigned insertVersion(MYSQL *connexion, Version *version, char *erreur);
 unsigned addVersions(MYSQL *connexion, char *path, char *erreur);
+unsigned selectByNiceNameOrdered(MYSQL *connexion, char version[][2][50], unsigned *nbElements, char *modelNiceName, char *erreur);
 
 #endif
