@@ -2,7 +2,6 @@
 #define MARQUES_H
 
 #define     QUERY_LENGTH    255
-#define     NAME_LENGTH     50
 
 /**
  * Represente une marque avec <char *id>, <char *name>, <char* niceName>
