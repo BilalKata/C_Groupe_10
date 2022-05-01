@@ -114,12 +114,12 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
  * 
  * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
  */
-unsigned selectMarques(MYSQL *connexion, char marques[][NAME_LENGTH], unsigned *nbr_element, char *erreur) {
+unsigned selectMarques(MYSQL *connexion, Marque marques[], unsigned *nbr_element, char *erreur) {
     MYSQL_ROW row;
     MYSQL_RES *results; 
     unsigned i = 0;
     char query[QUERY_LENGTH];
-    strcpy(query, "SELECT name FROM Marque ORDER BY name ASC");
+    strcpy(query, "SELECT * FROM Marque ORDER BY name ASC");
     
     if (mysql_query(connexion, query) != 0) {
         strcpy(erreur, "ERREUR: Impossible de faire la selection de la table marque\n");
@@ -133,9 +133,14 @@ unsigned selectMarques(MYSQL *connexion, char marques[][NAME_LENGTH], unsigned *
         mysql_free_result(results);
         return 0;
     }
-    
+
     while ((row = mysql_fetch_row(results))){
-        strcpy(&(marques[i][0]),row[0]);
+        marques[i].id = (char *) malloc(10); 
+        marques[i].name = (char *) malloc(20); 
+        marques[i].niceName = (char *) malloc(20); 
+        strcpy(marques[i].id,row[0]);
+        strcpy(marques[i].name,row[1]);
+        strcpy(marques[i].niceName,row[2]);
         i++;
     }
     *nbr_element = i;
