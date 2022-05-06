@@ -8,8 +8,7 @@
 
 static char erreur[255];
 static char path[]="../ressources/versions_moteurs.txt";
-char version[10][2][50];
-char version2[10][2][50];
+char version[3][2][50];
 unsigned nbElements;
 Version *version_t;
 MYSQL *connexion;
@@ -30,13 +29,6 @@ void setup(void) {
     strcpy(version_t->name, "S PZEV 4dr Wagon (2.5L 5cyl 5M)");
     strcpy(version_t->horsepower, "140");
     strcpy(version_t->modelNiceName, "jetta-sportwagen");
-}
-
-void setup2(void){
-    connexion = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
-    mysql_query(connexion, "DROP TABLE version");
-    createTableVersion(connexion, erreur);
-    addVersions(connexion, path, erreur);
 }
 
 void clean(void) {
@@ -91,7 +83,8 @@ void ajoutVersion_fichierNonOuvert(){
 //base de données prexistante
 
 void selectSortedElement_succes(){
-    connexion = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
+    createTableVersion(connexion, erreur);
+    addVersions(connexion, path, erreur);
     TEST_ASSERT_EQUAL_UINT8(1, selectByNiceNameOrdered(connexion, version, &nbElements, "tsx", erreur));
     TEST_ASSERT_EQUAL_STRING("4dr Sedan (2.4L 4cyl 5A)", version[0][0]);
     TEST_ASSERT_EQUAL_STRING("201", version[0][1]);
@@ -102,18 +95,15 @@ void selectSortedElement_succes(){
 }
 
 void selectSortedElement_inexistant(){
-    connexion = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
-    TEST_ASSERT_EQUAL_UINT8(1, selectByNiceNameOrdered(connexion, version2, &nbElements, "qksjmksdjlkjdlskqdjl", erreur));
-    TEST_ASSERT_EQUAL_STRING("", version2[0][0]);
-    TEST_ASSERT_EQUAL_STRING("", version2[0][1]);
-    fermerConnexion(connexion);
+    createTableVersion(connexion, erreur);
+    addVersions(connexion, path, erreur);
+    TEST_ASSERT_EQUAL_UINT8(0, selectByNiceNameOrdered(connexion, version, &nbElements, "aaaaaa", erreur));
 }
 
 
 
 int main(void) {
     UNITY_BEGIN();
-    /*
     setup();
     RUN_TEST(createTabletest_succes);
     setup();
@@ -127,11 +117,10 @@ int main(void) {
     setup();
     RUN_TEST(ajoutVersion_fichierNonOuvert);
     setup();
-    */
-    //setup2();
     RUN_TEST(selectSortedElement_succes);
+    setup();
     RUN_TEST(selectSortedElement_inexistant);
-    //clean();
+    clean();
     UNITY_END();
     return 0;
 }

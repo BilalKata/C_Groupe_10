@@ -82,19 +82,26 @@ unsigned selectByNiceNameOrdered(MYSQL *connexion, char version[][2][50], unsign
     MYSQL_ROW row;
     char query[255];
     unsigned retour;
-    int i;
-    sprintf(query, "SELECT name, versionPower FROM version WHERE modelNiceName='%s' ORDER BY name ASC;", modelNiceName);
+    int i =0;
+    sprintf(query, "SELECT name, versionPower FROM version WHERE modelNiceName='%s' ORDER BY name ASC", modelNiceName);
     if(mysql_query(connexion, query)==0){
         MYSQL_RES *result = mysql_store_result(connexion);
-        while ((row = mysql_fetch_row(result))){
+
+        while (row = mysql_fetch_row(result)){
             strcpy(&(version[i][0][0]),row[0]);
             strcpy(&(version[i][1][0]),row[1]);
             i++;
         }
         *nbElements=i;
+
         retour=1;
+        if (i == 0) {
+            strcpy(erreur, "ERREUR: Aucun element");
+            retour = 0;
+        }
+        
     }else{
-        strcpy(erreur, "ERREUR: La version demande n est pas repertorie");
+        strcpy(erreur, "ERREUR: Requete impossible");
         retour=0;
     }
 
