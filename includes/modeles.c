@@ -58,6 +58,7 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 		int ligne = 1;
 		while (fscanf(fichier, "%[^\n]", buffer) != EOF)
 		{
+			MAX = 30;
 			jsonPrimitive(buffer, "id", makeId, 10, erreur);
 
 			jsonArray(buffer, "models", resultat, &MAX, erreur);
