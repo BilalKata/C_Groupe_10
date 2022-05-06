@@ -113,7 +113,7 @@ unsigned jsonArray(char *chaineJson, char *nomAttribut, char resultats[][DIM], u
     unsigned taille = strlen(tableau);
     char valeur[DIM];
     strcpy(valeur, "");
-    strncat(valeur, "{", 1);
+    strcat(valeur, "{");
     for (unsigned i = 0; i < taille; i++) {
         if (tableau[i] == '}') {
             strncat(valeur, &tableau[i], 1);

@@ -8,13 +8,17 @@
 char erreur[200];
 char query[50];
 char path[50];
+unsigned nbr_element;
 MYSQL *connexion;
 Marque *marque;
+Marque marques[40];
 MYSQL_ROW row;
 
 void setup(void) {
     connexion = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
-    mysql_query(connexion, "DROP TABLE Marque");
+    mysql_query(connexion, "DROP TABLE IF EXISTS Version");
+    mysql_query(connexion, "DROP TABLE IF EXISTS Modele");
+    mysql_query(connexion, "DROP TABLE IF EXISTS Marque");
         
     marque = (Marque *) malloc(30);
     marque->id = (char *) malloc(10);
@@ -27,6 +31,8 @@ void setup(void) {
     strcpy(marque->id, "2000");
     strcpy(marque->name, "Mercedes");
     strcpy(marque->niceName, "mercedes");
+    strcpy(path, "../ressources/marques_modeles.txt");
+
 }
 
 void clear(void) {
@@ -34,6 +40,11 @@ void clear(void) {
     free(marque->name);
     free(marque->niceName);
     free(marque);
+    for (unsigned i = 0; i < nbr_element; i++) {
+        free(marques[i].id);
+        free(marques[i].name);
+        free(marques[i].niceName);
+    }
     fermerConnexion(connexion);
 }
 
@@ -62,13 +73,11 @@ void test_insertion_non_reussie(void) {
 }
 
 void test_insertion_avec_fichier(void) {
-    strcpy(path, "../ressources/marques_modeles.txt");
     createTableMarque(connexion, erreur);
     TEST_ASSERT_EQUAL_UINT(1, addMarques(connexion, path, erreur));
 }
 
 void test_trouver_un_element(void) {
-    strcpy(path, "../ressources/marques_modeles.txt");
     strcpy(query, "SELECT * FROM Marque WHERE id = 200002305");
     createTableMarque(connexion, erreur);
     addMarques(connexion, path, erreur);
@@ -84,6 +93,15 @@ void test_insertion_avec_info_manquante(void) {
     createTableMarque(connexion, erreur);
     TEST_ASSERT_EQUAL_UINT(0, addMarques(connexion, path, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Attribut non trouve\n", erreur);
+}
+
+void test_select_reussie(void) {
+    createTableMarque(connexion, erreur);
+    addMarques(connexion, path, erreur);
+    TEST_ASSERT_EQUAL_UINT(1, selectMarques(connexion, marques, &nbr_element, erreur));
+    TEST_ASSERT_EQUAL_STRING("200002038", marques[0].id);
+    TEST_ASSERT_EQUAL_STRING("Acura", marques[0].name);
+    TEST_ASSERT_EQUAL_STRING("acura", marques[0].niceName);
 }
 
 int main(void) {
@@ -102,6 +120,8 @@ int main(void) {
     RUN_TEST(test_trouver_un_element);
     setup();
     RUN_TEST(test_insertion_avec_info_manquante);
+    setup();
+    RUN_TEST(test_select_reussie);
     clear();
     UNITY_END();
     return 0;
