@@ -10,15 +10,14 @@
 unsigned createTableModeles(MYSQL *connect, char *erreur)
 {
 	int retourne = 1;
-	char query[] = "                                                  \
-                CREATE TABLE Modele(                                \
-                id SMALLINT,                                        \
-                name VARCHAR(50) NOT NULL,                          \
-                niceName VARCHAR(50) NOT NULL,                      \
-                makeId INT UNSIGNED NOT NULL,                           \
-                PRIMARY KEY(id),                                    \
-                UNIQUE(name),                                       \
-                FOREIGN KEY(makeId) REFERENCES Marque(id))";
+	char query[] = "CREATE TABLE Modele(						\
+					id VARCHAR(50) NOT NULL,					\
+					name VARCHAR(50) NOT NULL,					\
+					niceName VARCHAR(50) NOT NULL,				\
+					makeId INT UNSIGNED NOT NULL,				\
+					PRIMARY KEY( niceName),						\
+					UNIQUE(id, name),							\
+					FOREIGN KEY(makeId) REFERENCES Marque(id))";\
 
 	if (mysql_query(connect, query))
 	{
@@ -28,10 +27,10 @@ unsigned createTableModeles(MYSQL *connect, char *erreur)
 	return retourne;
 }
 
-unsigned insertModeles(MYSQL *connect, char id, char name, char niceName, char makeId, char *erreur)
+unsigned insertModeles(MYSQL *connect, char *id, char *name, char *niceName, char *makeId, char *erreur)
 {
 	char query[QUERY_LENGHT];
-	sprintf(query, "INSERT INTO Modeles VALUES (%s, '%s', '%s',%s)", id, name, niceName, makeId);
+	sprintf(query, "INSERT INTO Modele VALUES ('%s', '%s', '%s',%s)", id, name, niceName, makeId);
 
 	if (mysql_query(connect, query) != 0)
 	{
@@ -44,10 +43,11 @@ unsigned insertModeles(MYSQL *connect, char id, char name, char niceName, char m
 unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 {
 	FILE *fichier = fopen(chemin, "r");
-	char id[20], name[50], niceName[50], makeId[50], resultat[50];
+	char id[20], name[50], niceName[50], makeId[50], resultat[50][DIM];
 	int retour;
 	unsigned int MAX = 30;
-	if (fichier != NULL)
+	char query[250];
+	if (fichier == NULL)
 	{
 		strcpy(erreur, "ERREUR: Impossible d'ouvrir le fichier\n");
 	}
@@ -56,7 +56,7 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 		char *buffer = (char *)malloc(2048);
 
 		int ligne = 1;
-		while (fscanf(fichier, "[\n", buffer) != EOF)
+		while (fscanf(fichier, "%[^\n]", buffer) != EOF)
 		{
 			jsonPrimitive(buffer, "id", makeId, 10, erreur);
 
