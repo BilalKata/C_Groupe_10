@@ -9,7 +9,7 @@
 
 unsigned createTableModeles(MYSQL *connect, char *erreur)
 {
-	int retourne = 1;
+	unsigned retour = 1;
 	char query[] = "CREATE TABLE Modele(						\
 					id VARCHAR(50) NOT NULL,					\
 					name VARCHAR(50) NOT NULL,					\
@@ -22,13 +22,14 @@ unsigned createTableModeles(MYSQL *connect, char *erreur)
 	if (mysql_query(connect, query))
 	{
 		strcpy(erreur, "ERREUR: Impossible de creer la table modeles\n");
-		retourne = 0;
+		retour = 0;
 	}
-	return retourne;
+	return retour;
 }
 
 unsigned insertModeles(MYSQL *connect, char *id, char *name, char *niceName, char *makeId, char *erreur)
-{
+{	
+	unsigned retour = 1;
 	char query[QUERY_LENGHT];
 	sprintf(query, "INSERT INTO Modele VALUES ('%s', '%s', '%s',%s)", id, name, niceName, makeId);
 
@@ -37,7 +38,7 @@ unsigned insertModeles(MYSQL *connect, char *id, char *name, char *niceName, cha
 		strcpy(erreur, "ERREUR: Impossible de faire l'insertion dans la table modeles\n");
 		return 0;
 	}
-	return 1;
+	return retour;
 }
 
 unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
@@ -50,6 +51,7 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 	if (fichier == NULL)
 	{
 		strcpy(erreur, "ERREUR: Impossible d'ouvrir le fichier\n");
+		retour = 0;
 	}
 	else
 	{
@@ -75,6 +77,8 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 			fgetc(fichier);
 		}
 		free(buffer);
-		retour = 0;
+		retour = 1;
+
 	}
+	return retour;
 }
