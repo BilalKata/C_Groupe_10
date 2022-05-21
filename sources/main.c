@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     unsigned state = 1;
     unsigned choise = 1;
 
-    choise = afficherEcran1();
+    choise = afficher_ecran_acceuil();
     while (state) {
         switch (choise) {
             case 1: if (login(erreur) == 1) choise = 4; break;

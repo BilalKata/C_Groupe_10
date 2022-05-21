@@ -1,13 +1,14 @@
 #include <stdio.h> 
 #include <stdlib.h>
 #include <mysql.h>
+#include "../includes/affichage.h"
 #include "../includes/users.h"
 #include "../includes/marques.h"
 #include "../includes/modeles.h"
 #include "../includes/versions.h"
 
 
-unsigned afficher_ecran_acceuil(){
+unsigned afficher_ecran_acceuil(void){
     int response = 0;
     printf("------------- BIENVENUE -------------\n");
     printf("=====================================\n");
