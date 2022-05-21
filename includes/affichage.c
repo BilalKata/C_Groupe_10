@@ -1,9 +1,13 @@
-#include <stdint.h> 
 #include <stdio.h> 
+#include <stdlib.h>
+#include <mysql.h>
 #include "../includes/users.h"
+#include "../includes/marques.h"
+#include "../includes/modeles.h"
+#include "../includes/versions.h"
 
 
-unsigned afficherEcran1(){
+unsigned afficher_ecran_acceuil(){
     int response = 0;
     printf("------------- BIENVENUE -------------\n");
     printf("=====================================\n");
@@ -12,9 +16,6 @@ unsigned afficherEcran1(){
     printf("   3. Quitter\n\n");
     printf("   >  ");
     scanf("%d", &response);
-
-    printf("=====================================\n");
-    printf("-------------- Voiture --------------\n");
     
     return response;
 }
