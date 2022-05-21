@@ -1,9 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <mysql.h>
-#include <locale.h>
 #include <string.h>
-#include <stdbool.h>
+#include <mysql.h>
 #include "modeles.h"
 #include "json.h"
 
