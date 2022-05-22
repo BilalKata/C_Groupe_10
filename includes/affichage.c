@@ -1,5 +1,6 @@
 #include <stdio.h> 
 #include <stdlib.h>
+#include <string.h>
 #include <mysql.h>
 #include "../includes/affichage.h"
 #include "../includes/users.h"
@@ -21,7 +22,7 @@ unsigned afficher_ecran_acceuil(void){
     return response;
 }
 
-unsigned login(char *erreur) {
+unsigned login(char *user, char *erreur) {
     char username[25];
     char password[25];
     unsigned connected = 0;
@@ -32,6 +33,7 @@ unsigned login(char *erreur) {
     scanf("%s", username);
     printf("Password: ");
     scanf("%s", password);
+    strcpy(user, username);
     return authenticateUser(username, password, "../ressources/users.txt", erreur);
 }
 
@@ -53,4 +55,21 @@ unsigned signin(char *erreur) {
         return 1;
     }
     return 0;
+}
+
+void utilisateurs(void) {
+    unsigned short type;
+    char username[25];
+    char password[25];
+    char string_type[4];
+    FILE *file = fopen("../ressources/users.txt", "r");
+    if (file != NULL) {
+        printf("------------ UTILISATEURS -----------\n");
+        printf("=====================================\n");
+        printf("     EST ADMIN    |       NOM        \n\n");
+        while (fscanf(file, "%hd %s %s", &type, username, password) != EOF) {
+            (type == 1 ) ? strcpy(string_type, "OUI") : strcpy(string_type, "NON");
+            printf("       %s        |  %9s\n", string_type, username);
+        }
+    }
 }
