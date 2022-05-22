@@ -112,7 +112,7 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
  * \param marques (Marque []) un tableau de marque 
  * \param erreur (char *) garnie si une erreur survient
  * 
- * \return (unsined) 1 si la creation a ete effectue avec succes sinon 0
+ * \return (unsigned) 1 si la creation a ete effectue avec succes sinon 0
  */
 unsigned selectMarques(MYSQL *connexion, Marque marques[], unsigned *nbr_element, char *erreur) {
     MYSQL_ROW row;

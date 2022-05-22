@@ -5,12 +5,14 @@
 
 unsigned authenticateUser(char *username, char *password, char *path, char *erreur){
     unsigned short retour = 0;
+    unsigned short type;
     char fileUsername[50];
     char filePassword[50];
     FILE *file = fopen(path, "r");
     if (file != NULL) {
-        while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+        while (fscanf(file, "%hd %s %s", &type, fileUsername, filePassword) != EOF) {
             if (strcmp(fileUsername, username) == 0) {
+                encryptPassword(password);
                 if(strcmp(filePassword, password)==0){
                     retour=1;
                     break;
@@ -42,7 +44,7 @@ unsigned short createNewUser(char *username, char *path, char *encryptedPassword
             strcpy(erreur, "ERREUR: Le nom d utilisateur existe deja");
             retour = 0;
         } else {
-            fprintf(file, "\n%s %s                     ", username, encryptedPassword);
+            fprintf(file, "\n%d %s                     %s                     ", 0, username, encryptedPassword);
             retour = 1;
         }
     }else{
@@ -198,4 +200,16 @@ unsigned deleteUser(char *username, char *password, char *path, char *erreur){
     }
     fclose(file);
     return retour;
+}
+
+unsigned is_admin(char *user, char *path, char *erreur) {
+    unsigned short type;
+    char username[50];
+    char password[50];
+    FILE *file = fopen(path, "r");
+
+    while (fscanf(file, "%hd %s %s", &type, username, password) != EOF) 
+        if (strcmp(user, username) == 0) break;
+
+    return type;
 }
