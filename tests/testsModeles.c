@@ -8,11 +8,13 @@
 
 
 char erreur[250];
+char resultatModele[50][10];
  MYSQL *connect;
 
 void setup(){
     connect = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
     mysql_query(connect, "DROP TABLE modele");
+    
 }
 
 void clean(){
@@ -33,7 +35,7 @@ void test_creation_table_modele_erreur(void){
 
 void test_insert_non_reussi(void){
     createTableModeles(connect,erreur);
-    TEST_ASSERT_EQUAL_UINT(0,insertModeles(connect,"Acura_ILX","ILX","ilx","200002038",erreur));
+    TEST_ASSERT_EQUAL_UINT(0,insertModeles(connect,"Acura_ILX","ILX","ilx","20000203812",erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Impossible de faire l'insertion dans la table modeles\n",erreur);
 }
 
@@ -59,6 +61,23 @@ void test_succes(void){
 
 
 
+void test_select_success(void){
+    createTableModeles(connect,erreur);
+    ajoutDesModeles(connect,"../ressources/marques_modeles.txt",erreur);
+    TEST_ASSERT_EQUAL_UINT(1,select(connect,"audi",resultatModele,erreur));
+}
+
+void test_select_fail(void){
+    createTableModeles(connect,erreur);
+    ajoutDesModeles(connect,"../ressources/marques_modeles.txt",erreur);
+    TEST_ASSERT_EQUAL_UINT(0,select(connect,"esfe",resultatModele,erreur));
+    TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvaise entree",erreur);
+}
+
+
+
+
+
 
 
 int main(void) {
@@ -78,6 +97,11 @@ int main(void) {
     RUN_TEST(test_modeles_fichier_non_ouvert);
     setup();
     RUN_TEST(test_succes);
+
+    setup();
+    RUN_TEST(test_select_success);
+    setup();
+    RUN_TEST(test_select_fail);
     
     
 
