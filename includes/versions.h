@@ -1,7 +1,7 @@
 #ifndef VERSIONS_H
 #define VERSIONS_H
 
-#define QUERY_LENGHT 255
+#define QUERY_LENGHT 300
 
 typedef struct {
     char *id;

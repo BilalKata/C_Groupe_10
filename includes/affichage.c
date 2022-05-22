@@ -33,7 +33,7 @@ unsigned menu_simple(){
     printf("  4.Modifier son username\n");
     printf("  5.Modifier son mot de passe\n");
     printf("  6.Se deconnecter\n");
-    scanf("%d", &response);
+    scanf("   %d  ", &response);
     //verification de validite pour response avant return
 
     return response;
