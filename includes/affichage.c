@@ -8,7 +8,7 @@
 #include "../includes/versions.h"
 
 
-unsigned afficher_ecran_acceuil(void){
+unsigned ecran_acceuil(void){
     int response = 0;
     printf("------------- BIENVENUE -------------\n");
     printf("=====================================\n");
@@ -17,7 +17,39 @@ unsigned afficher_ecran_acceuil(void){
     printf("   3. Quitter\n\n");
     printf("   >  ");
     scanf("%d", &response);
-    
+    //verification de validite pour response avant return
+
+    return response;
+}
+
+unsigned menu_simple(){
+    int response = 0;
+    printf("--------------- MENU ----------------\n");
+    printf("=====================================\n");
+    printf("  1.Afficher les marques\n");
+    printf("  2.Afficher les modeles d'une marque\n");
+    printf("  3.Afficher les versions d'un modele\n");
+    printf("  4.Modifier son username\n");
+    printf("  5.Modifier son mot de passe\n");
+    printf("  6.Se deconnecter\n");
+    scanf("%d", &response);
+    //verification de validite pour response avant return
+
+    return response;
+}
+
+unsigned menu_admin(){
+    int response = 0;
+    printf("--------------- MENU ----------------\n");
+    printf("=====================================\n");
+    printf("  1.Afficher les utilisateurs\n");
+    printf("  2.Supprimer un utilisateurs\n");
+    printf("  3.Passer un user en administrateur\n");
+    printf("  4.....\n");
+    printf("  5.Se deconnecter\n");
+    scanf("%d", &response);
+    //verification de validite pour response avant return
+
     return response;
 }
 
