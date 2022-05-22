@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "modeles.h"
 #include "json.h"
+#include "connexion.h"
 
 unsigned createTableModeles(MYSQL *connect, char *erreur)
 {
@@ -17,7 +18,7 @@ unsigned createTableModeles(MYSQL *connect, char *erreur)
 					makeId INT UNSIGNED NOT NULL,				\
 					PRIMARY KEY( niceName),						\
 					UNIQUE(id, name),							\
-					FOREIGN KEY(makeId) REFERENCES Marque(id))";\
+					FOREIGN KEY(makeId) REFERENCES Marque(id))";
 
 	if (mysql_query(connect, query))
 	{
@@ -28,7 +29,7 @@ unsigned createTableModeles(MYSQL *connect, char *erreur)
 }
 
 unsigned insertModeles(MYSQL *connect, char *id, char *name, char *niceName, char *makeId, char *erreur)
-{	
+{
 	unsigned retour = 1;
 	char query[QUERY_LENGHT];
 	sprintf(query, "INSERT INTO Modele VALUES ('%s', '%s', '%s',%s)", id, name, niceName, makeId);
@@ -78,7 +79,59 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 		}
 		free(buffer);
 		retour = 1;
-
 	}
+	return retour;
+}
+
+unsigned select(MYSQL *connect, char *given_NiceName, char resultatModele[][10], char *erreur)
+{
+
+	MYSQL_ROW row;
+	MYSQL_RES *resultat;
+	char getted_id[20];
+	int i = 0;
+	char query[QUERY_LENGHT];
+	unsigned retour = 1;
+
+	sprintf(query, "SELECT id FROM marque WHERE niceName='%s'", given_NiceName);
+
+	if (mysql_query(connect, query) == 0)
+	{
+		resultat = mysql_store_result(connect);
+
+		if ( mysql_affected_rows(connect)!= 0)
+		{
+			row = mysql_fetch_row(resultat);
+
+			strcpy(getted_id, row[0]);
+
+			sprintf(query, "SELECT name FROM modele WHERE makeId='%s' ORDER BY name ASC", getted_id);
+			if (mysql_query(connect, query) == 0)
+			{
+				resultat = mysql_store_result(connect);
+				while ((row = mysql_fetch_row(resultat)))
+				{
+					strcpy(&(resultatModele[i][0]), row[0]);
+					i++;
+				}
+			}
+			else
+			{
+				strcpy(erreur, "ERREUR: Mauvaise entree");
+				retour = 0;
+			}
+		}
+		else
+			{
+				strcpy(erreur, "ERREUR: Mauvaise entree");
+				retour = 0;
+			}
+	}
+	else
+	{
+		strcpy(erreur, "ERREUR: Mauvaise entree");
+		retour = 0;
+	}
+
 	return retour;
 }
