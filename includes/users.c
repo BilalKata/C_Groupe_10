@@ -177,7 +177,7 @@ unsigned updatePassword(char *username, char *oldPassword, char *path, char *new
     return retour;
 }
 
-unsigned deleteUser(char *username, char *password, char *path, char *erreur){
+unsigned deleteUser(char *username, char *path, char *erreur){
 
     char filePassword[50];
     char fileUsername[50];
@@ -193,16 +193,10 @@ unsigned deleteUser(char *username, char *password, char *path, char *erreur){
 
     while (fscanf(file, "%d %s %s", &type, fileUsername, filePassword) != EOF) {
         if (strcmp(fileUsername, username) == 0) {
-            if(strcmp(filePassword, password)==0){
-                fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
-                fprintf(file, "%d %s %s", 0 ,"xxxxxxxxxxxxxx", "xxxxxxxxxxxxxx");
-                retour=1;
-                break;
-            } else{
-                strcpy(erreur, "ERREUR: Mauvais mot de passe");
-                retour=2;
-                break;
-            }
+            fseek(file, (2+strlen(fileUsername) + 20 + strlen(filePassword)) * -1, SEEK_CUR);
+            fprintf(file, "%d %s     %s     ", 0,"xxxxxxxxxxxxxxx", "xxxxxxxxxxxxxxx");
+            retour=1;
+            break;
         }
     }
     fclose(file);

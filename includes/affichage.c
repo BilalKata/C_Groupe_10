@@ -88,16 +88,20 @@ void utilisateurs(void) {
     char username[25];
     char password[25];
     char string_type[4];
+    char c;
     FILE *file = fopen("../ressources/users.txt", "r");
     if (file != NULL) {
         printf("------------ UTILISATEURS -----------\n");
         printf("=====================================\n");
-        printf("     EST ADMIN    |       NOM        \n\n");
+        printf("     EST ADMIN    |       NOM        \n");
+        printf("-------------------------------------\n");
         while (fscanf(file, "%hd %s %s", &type, username, password) != EOF) {
             (type == 1 ) ? strcpy(string_type, "OUI") : strcpy(string_type, "NON");
             printf("       %s        |  %9s\n", string_type, username);
         }
     }
+    fflush(stdin);
+    c = getchar();
 }
 
 unsigned modifier_username(char *current_username, char *erreur) {
@@ -128,5 +132,17 @@ unsigned modifier_password(char *username, char *erreur) {
     scanf("%s", npassword);
     if (updatePassword(username, cpassword, "../ressources/users.txt", npassword, erreur) == 1) return 1;
 
+    return 0;
+}
+
+unsigned delete_user(char *username, char *erreur) {
+    char dusername[255];
+    printf("------ SUPPRIMER UN UTILISATEUR -----\n");
+    printf("=====================================\n");
+    printf("Username a supprimer: ");
+    scanf("%s", dusername);
+    if (strcmp(username, dusername) != 0)
+        if (deleteUser(dusername, "../ressources/users.txt", erreur) == 1)
+            return 1;
     return 0;
 }

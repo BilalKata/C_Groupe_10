@@ -17,17 +17,16 @@ int main(int argc, char **argv) {
             case 4: CLEAN 
                 if (is_admin(username, "../ressources/users.txt", erreur)) {
                     do {
-                        choise = menu_admin(username, erreur);
                         CLEAN
+                        choise = menu_admin(username, erreur);
                         switch (choise) {
-                            case 1: CLEAN utilisateurs(); fgetc(stdin); break;
-                            case 2:
+                            case 1: CLEAN utilisateurs(); break;
+                            case 2: CLEAN delete_user(username, erreur); break;
                             case 3: CLEAN choise = 4; break;
                             case 4: CLEAN break;
                             default: CLEAN break;
                         }
                     } while (choise != 4);
-                    
                 }
                 else {
                     do {

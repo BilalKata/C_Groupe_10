@@ -8,7 +8,7 @@ unsigned short createNewUser(char *username, char *path,char *encryptedPassword,
 unsigned short userExist(char *username, char *path, char *erreur);
 unsigned updateUsername(char *oldUsername, char *password, char *path, char *newUsername, char *erreur);
 unsigned updatePassword(char *username, char *oldPassword, char *path, char *newPassword, char *erreur);
-unsigned deleteUser(char *username, char *password, char *path, char *erreur);
+unsigned deleteUser(char *username, char *path, char *erreur);
 void encryptPassword(char *password);
 unsigned is_admin(char *user, char *path, char *erreur);
 
