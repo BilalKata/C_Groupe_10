@@ -104,3 +104,31 @@ void utilisateurs(void) {
         }
     }
 }
+
+unsigned modifier_username(char *current_username, char *erreur) {
+    char username[25];
+    char password[25];
+    printf("------- MODIFIER VOTRE USERNAME -----\n");
+    printf("=====================================\n");
+    printf("Nouvel username: ");
+    scanf("%s", username);
+    printf("Mot de passe: ");
+    scanf("%s", password);
+    if (updateUsername(current_username, password, "../ressources/users.txt", username, erreur) == 1) return 1;
+
+    return 0;
+}
+
+unsigned modifier_password(char *username, char *erreur) {
+    char cpassword[25];
+    char npassword[25];
+    printf("------- MODIFIER VOTRE USERNAME -----\n");
+    printf("=====================================\n");
+    printf("Mot de passe actuel: ");
+    scanf("%s", cpassword);
+    printf("Nouveau mot de passe: ");
+    scanf("%s", npassword);
+    if (updatePassword(username, cpassword, "../ressources/users.txt", npassword, erreur) == 1) return 1;
+
+    return 0;
+}

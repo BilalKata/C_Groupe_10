@@ -16,5 +16,7 @@ unsigned menu_admin();
 unsigned login(char *user, char *erreur);
 unsigned signin(char *erreur);
 void utilisateurs(void);
+unsigned modifier_username(char *current_username, char *erreur);
+unsigned modifier_password(char *username, char *erreur);
 
 #endif
