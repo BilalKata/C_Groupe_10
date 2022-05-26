@@ -29,7 +29,8 @@ unsigned menu_simple(void){
     printf("  3.Afficher les versions d'un modele\n");
     printf("  4.Modifier votre username\n");
     printf("  5.Modifier votre mot de passe\n");
-    printf("  6.Se deconnecter\n");
+    printf("  6.Se deconnecter\n\n");
+    printf("   >  ");
     scanf("%d", &response);
     return response;
 }
@@ -41,7 +42,8 @@ unsigned menu_admin(void){
     printf("  1.Afficher les utilisateurs\n");
     printf("  2.Supprimer un utilisateurs\n");
     printf("  3.Passer un user en administrateur\n");
-    printf("  4.Se deconnecter\n");
+    printf("  4.Se deconnecter\n\n");
+    printf("   >  ");
     scanf("%d", &response);
     return response;
 }
@@ -107,8 +109,11 @@ unsigned modifier_username(char *current_username, char *erreur) {
     scanf("%s", username);
     printf("Mot de passe: ");
     scanf("%s", password);
-    if (updateUsername(current_username, password, "../ressources/users.txt", username, erreur) == 1) return 1;
-
+    if (updateUsername(current_username, password, "../ressources/users.txt", username, erreur) == 1) {
+        strcpy(current_username, username);
+        return 1;
+    }
+    
     return 0;
 }
 
