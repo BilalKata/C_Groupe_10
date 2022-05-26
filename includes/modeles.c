@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <mysql.h>
 #include "modeles.h"
 #include "json.h"
@@ -80,7 +81,7 @@ unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur)
 	return retour;
 }
 
-unsigned select(MYSQL *connect, char *given_NiceName, char resultatModele[][10], char *erreur)
+unsigned select(MYSQL *connect, char *given_NiceName, char resultatModele[][10], unsigned *nbElements,char *erreur)
 {
 
 	MYSQL_ROW row;
@@ -111,6 +112,7 @@ unsigned select(MYSQL *connect, char *given_NiceName, char resultatModele[][10],
 					strcpy(&(resultatModele[i][0]), row[0]);
 					i++;
 				}
+				*nbElements = i;
 			}
 			else
 			{
