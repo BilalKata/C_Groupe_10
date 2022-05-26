@@ -1,6 +1,7 @@
 #include <stdio.h> 
 #include <string.h>
 #include <mysql.h>
+#include <stdlib.h>
 #include "../includes/affichage.h"
 #include "../includes/users.h"
 #include "../includes/marques.h"
@@ -156,4 +157,88 @@ unsigned make_admin(char *erreur) {
     scanf("%s", username);
     if (makeUserAdmin(username, PATH, erreur) == 1) return 1;
     return 0;
+}
+
+void afficher_marques(MYSQL *connexion, char *erreur) {
+    unsigned nbr_marques = 40;
+    char c;
+    Marque marques[nbr_marques];
+    if (selectMarques(connexion, marques, &nbr_marques, erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    printf("--------- Liste des marques ---------\n");
+    printf("=====================================\n");
+    printf("Il y a %d marques :\n", nbr_marques);
+    printf("%s\t\t%s\t%15s\n", "Id", "Name", "NiceName");
+    printf("=======================================\n");
+    for (unsigned i = 0; i < nbr_marques; i++){
+        printf("%s\t%s%15s\n", marques[i].id, marques[i].name, marques[i].niceName);
+        free(marques[i].id);
+        free(marques[i].name);
+        free(marques[i].niceName);
+    }
+    fflush(stdin);
+    c = getchar();
+}
+
+void afficher_modeles(MYSQL *connexion, char *erreur) {
+
+    unsigned nbr_modeles = 40;
+    char resultatModele[50][10];
+    char marque[10];
+    printf("Entrez le nom de la marque(en minuscule): \n> ");
+    scanf("%s", &marque);
+    char c;
+    int i=0;
+    printf("--------- Liste des modeles ---------\n");
+    printf("=====================================\n");
+    if (select(connexion, marque, resultatModele, &nbr_modeles, erreur) == 0){
+        fprintf(stderr, "%s, Merci de recommencer!", erreur);
+        fflush(stdin);
+        c = getchar();
+    }else{
+        printf("Il y a %d modele(s) de la marque %s\n", nbr_modeles, marque);
+
+        for (i = 0; i < nbr_modeles; i++)
+        {
+            printf(">%s\n", &resultatModele[i][0]);
+        }
+        printf("=======================================\n");
+        fflush(stdin);
+        c = getchar();
+    }
+}
+
+void afficher_versions(MYSQL *connexion, char *erreur){
+    char c;
+    unsigned nbr_versions = 40;
+    char version[3][2][50];
+    char marque[50]="à definir";
+    char modele[50];
+    int i = 0;
+
+    printf("Entrez le nom du modele(en minuscule): \n> ");
+    scanf("%s", &modele);
+    
+    if (selectByNiceNameOrdered(connexion, version, &nbr_versions, modele, erreur) == 0){
+        fprintf(stderr, "%s, Merci de recommencer!", erreur);
+        fflush(stdin);
+        c = getchar();
+    }else{
+        printf("--------- Liste des modeles ---------\n");
+        printf("=====================================\n");
+        printf("Il y a %d version(s) du modele(%s) %s\n", nbr_versions, modele, marque);
+
+        for (i = 0; i < nbr_versions; i++)
+        {
+            printf(">%s >%s\n", &version[i][0], &version[i][1]);
+        }
+        printf("=======================================\n");
+        fflush(stdin);
+        c = getchar();
+    }
+    
+    fflush(stdin);
+    c = getchar();
 }

@@ -22,4 +22,7 @@ unsigned modifier_username(char *current_username, char *erreur);
 unsigned modifier_password(char *username, char *erreur);
 unsigned delete_user(char *username, char *erreur);
 unsigned make_admin(char *erreur);
+void afficher_marques(MYSQL *connexion, char *erreur);
+void afficher_modeles(MYSQL *connexion, char *erreur);
+void afficher_versions(MYSQL *connexion, char *erreur);
 #endif
