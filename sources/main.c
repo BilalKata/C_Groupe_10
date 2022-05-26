@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
             case 2: CLEAN if (signin(erreur) == 1) choise = 1; break;
             case 3: CLEAN state = 0; break;
             case 4: CLEAN 
-                if (is_admin(username, "../ressources/users.txt", erreur)) {
+                if (is_admin(username, PATH, erreur)) {
                     do {
                         CLEAN
                         choise = menu_admin(username, erreur);

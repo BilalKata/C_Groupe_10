@@ -5,8 +5,10 @@
 
 #ifdef _WIN32
     #define     CLEAN   system("cls");
+    #define     PATH    "ressources/users.txt"
 #else
     #define     CLEAN   system("clear");
+    #define     PATH    "../ressources/users.txt"
 #endif
 
 

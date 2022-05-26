@@ -60,7 +60,7 @@ unsigned login(char *user, char *erreur) {
     printf("Password: ");
     scanf("%s", password);
     strcpy(user, username);
-    return authenticateUser(username, password, "../ressources/users.txt", erreur);
+    return authenticateUser(username, password, PATH, erreur);
 }
 
 unsigned signin(char *erreur) {
@@ -73,11 +73,11 @@ unsigned signin(char *erreur) {
     printf("Username: ");
     scanf("%s", username);
 
-    if (!userExist(username, "../ressources/users.txt", erreur)) {
+    if (!userExist(username, PATH, erreur)) {
         printf("Password: ");
         scanf("%s", password);
         encryptPassword(password);
-        createNewUser(username, "../ressources/users.txt", password, erreur);
+        createNewUser(username, PATH, password, erreur);
         return 1;
     }
     return 0;
@@ -89,7 +89,7 @@ void utilisateurs(void) {
     char password[25];
     char string_type[4];
     char c;
-    FILE *file = fopen("../ressources/users.txt", "r");
+    FILE *file = fopen(PATH, "r");
     if (file != NULL) {
         printf("------------ UTILISATEURS -----------\n");
         printf("=====================================\n");
@@ -113,7 +113,7 @@ unsigned modifier_username(char *current_username, char *erreur) {
     scanf("%s", username);
     printf("Mot de passe: ");
     scanf("%s", password);
-    if (updateUsername(current_username, password, "../ressources/users.txt", username, erreur) == 1) {
+    if (updateUsername(current_username, password, PATH, username, erreur) == 1) {
         strcpy(current_username, username);
         return 1;
     }
@@ -130,7 +130,7 @@ unsigned modifier_password(char *username, char *erreur) {
     scanf("%s", cpassword);
     printf("Nouveau mot de passe: ");
     scanf("%s", npassword);
-    if (updatePassword(username, cpassword, "../ressources/users.txt", npassword, erreur) == 1) return 1;
+    if (updatePassword(username, cpassword, PATH, npassword, erreur) == 1) return 1;
 
     return 0;
 }
@@ -142,7 +142,7 @@ unsigned delete_user(char *username, char *erreur) {
     printf("Username a supprimer: ");
     scanf("%s", dusername);
     if (strcmp(username, dusername) != 0)
-        if (deleteUser(dusername, "../ressources/users.txt", erreur) == 1)
+        if (deleteUser(dusername, PATH, erreur) == 1)
             return 1;
     return 0;
 }
@@ -153,6 +153,6 @@ unsigned make_admin(char *erreur) {
     printf("=====================================\n");
     printf("Username: ");
     scanf("%s", username);
-    if (makeUserAdmin(username, "../ressources/users.txt", erreur) == 1) return 1;
+    if (makeUserAdmin(username, PATH, erreur) == 1) return 1;
     return 0;
 }
