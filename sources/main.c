@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
                         switch (choise) {
                             case 1: CLEAN utilisateurs(); break;
                             case 2: CLEAN delete_user(username, erreur); break;
-                            case 3: CLEAN choise = 4; break;
-                            case 4: CLEAN break;
+                            case 3: CLEAN make_admin(erreur); break;
+                            case 4: CLEAN choise = 4;  break;
                             default: CLEAN break;
                         }
                     } while (choise != 4);

@@ -146,3 +146,13 @@ unsigned delete_user(char *username, char *erreur) {
             return 1;
     return 0;
 }
+
+unsigned make_admin(char *erreur) {
+    char username[255];
+    printf("------ METTRE UN USER EN ADMIN ------\n");
+    printf("=====================================\n");
+    printf("Username: ");
+    scanf("%s", username);
+    if (makeUserAdmin(username, "../ressources/users.txt", erreur) == 1) return 1;
+    return 0;
+}

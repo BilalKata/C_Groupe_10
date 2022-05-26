@@ -214,3 +214,28 @@ unsigned is_admin(char *user, char *path, char *erreur) {
 
     return type;
 }
+
+unsigned makeUserAdmin(char *username, char *path, char *erreur) {
+    char cusername[50];
+    char password[50];
+    unsigned type;
+    int retour;
+
+    FILE* file = fopen(path, "r+");
+
+    if (file == NULL){
+        strcpy(erreur, "ERREUR: Le fichier n as pas ete ouvert");
+        retour=0;
+    }
+
+    while (fscanf(file, "%d %s %s", &type, cusername, password) != EOF) {
+        if (strcmp(username, cusername) == 0) {
+            fseek(file, (2+strlen(cusername) + 20 + strlen(password)) * -1, SEEK_CUR);
+            fprintf(file, "%d %s                    %s                    ", 1, cusername, password);
+            retour=1;
+            break;
+        }
+    }
+    fclose(file);
+    return retour;
+}

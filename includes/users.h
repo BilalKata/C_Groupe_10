@@ -1,8 +1,6 @@
 #ifndef USERS_H
 #define USERS_H
 
-
-
 unsigned authenticateUser(char *username, char *password, char *path,char *erreur);
 unsigned short createNewUser(char *username, char *path,char *encryptedPassword, char* erreur);
 unsigned short userExist(char *username, char *path, char *erreur);
@@ -11,5 +9,6 @@ unsigned updatePassword(char *username, char *oldPassword, char *path, char *new
 unsigned deleteUser(char *username, char *path, char *erreur);
 void encryptPassword(char *password);
 unsigned is_admin(char *user, char *path, char *erreur);
+unsigned makeUserAdmin(char *username, char *path, char *erreur);
 
 #endif
