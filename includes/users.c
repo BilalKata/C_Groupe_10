@@ -44,7 +44,7 @@ unsigned short createNewUser(char *username, char *path, char *encryptedPassword
             strcpy(erreur, "ERREUR: Le nom d utilisateur existe deja");
             retour = 0;
         } else {
-            fprintf(file, "\n%d %s                     %s                     ", 0, username, encryptedPassword);
+            fprintf(file, "\n%d %s                    %s                    ", 0, username, encryptedPassword);
             retour = 1;
         }
     }else{
@@ -84,12 +84,13 @@ void encryptPassword(char *password){
 unsigned short userExist(char *username, char *path, char *erreur){
     char uname[20];
     char password[20];
+    unsigned type;
     unsigned short retour = 0;
 
     FILE *file = fopen(path, "r");
     
     if (file != NULL) {
-        while (fscanf(file, "%s %s\n", uname, password)!=EOF){
+        while (fscanf(file, "%d %s %s\n", &type, uname, password)!=EOF){
             if (strcmp(uname, username) == 0){
                 retour = 1;
                 break;
@@ -107,6 +108,7 @@ unsigned updateUsername(char *oldUsername, char *password, char *path, char *new
 
     char filePassword[50];
     char fileUsername[50];
+    unsigned type;
     int retour;
 
     FILE* file = fopen(path, "r+");
@@ -117,11 +119,12 @@ unsigned updateUsername(char *oldUsername, char *password, char *path, char *new
     }
 
     if (userExist(newUsername, path, erreur)==0){
-        while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+        while (fscanf(file, "%d %s %s", &type, fileUsername, filePassword) != EOF) {
             if (strcmp(fileUsername, oldUsername) == 0) {
+                encryptPassword(password);
                 if(strcmp(filePassword, password)==0){
-                    fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
-                    fprintf(file, "%s %s", newUsername, filePassword);
+                    fseek(file, (2+strlen(fileUsername)+20+strlen(filePassword)) * -1, SEEK_CUR);
+                    fprintf(file, "%d %s                    %s                    ", type, newUsername, filePassword);
                     retour=1;
                     break;
                 } else{
@@ -144,6 +147,7 @@ unsigned updatePassword(char *username, char *oldPassword, char *path, char *new
 
     char filePassword[50];
     char fileUsername[50];
+    unsigned type;
     int retour;
 
     FILE* file = fopen(path, "r+");
@@ -153,11 +157,13 @@ unsigned updatePassword(char *username, char *oldPassword, char *path, char *new
         retour=0;
     }
 
-    while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+    while (fscanf(file, "%d %s %s", &type, fileUsername, filePassword) != EOF) {
         if (strcmp(fileUsername, username) == 0) {
+            encryptPassword(oldPassword);
             if(strcmp(filePassword, oldPassword)==0){
-                fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
-                fprintf(file, "%s %s", username, newPassword);
+                encryptPassword(newPassword);
+                fseek(file, (2+strlen(fileUsername)+20+strlen(filePassword)) * -1, SEEK_CUR);
+                fprintf(file, "%d %s                    %s                    ",type, username, newPassword);
                 retour=1;
                 break;
             } else{
@@ -175,6 +181,7 @@ unsigned deleteUser(char *username, char *password, char *path, char *erreur){
 
     char filePassword[50];
     char fileUsername[50];
+    unsigned type;
     int retour;
 
     FILE* file = fopen(path, "r+");
@@ -184,11 +191,11 @@ unsigned deleteUser(char *username, char *password, char *path, char *erreur){
         retour=0;
     }
 
-    while (fscanf(file, "%s %s", fileUsername, filePassword) != EOF) {
+    while (fscanf(file, "%d %s %s", &type, fileUsername, filePassword) != EOF) {
         if (strcmp(fileUsername, username) == 0) {
             if(strcmp(filePassword, password)==0){
                 fseek(file, (strlen(fileUsername) + 1 + strlen(filePassword)) * -1, SEEK_CUR);
-                fprintf(file, "%s %s", "xxxxxxxxxxxxxx", "xxxxxxxxxxxxxx");
+                fprintf(file, "%d %s %s", 0 ,"xxxxxxxxxxxxxx", "xxxxxxxxxxxxxx");
                 retour=1;
                 break;
             } else{
