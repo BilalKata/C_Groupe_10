@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../includes/affichage.h"
+#include "../includes/connexion.h"
 #include "../includes/users.h"
 
 int main(int argc, char **argv) {
@@ -23,10 +24,12 @@ int main(int argc, char **argv) {
                             case 1: CLEAN utilisateurs(); break;
                             case 2: CLEAN delete_user(username, erreur); break;
                             case 3: CLEAN make_admin(erreur); break;
-                            case 4: CLEAN choise = 4;  break;
+                            case 4: CLEAN init(connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur), erreur);  break;
+                            case 5: CLEAN reset(connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur));  break;
+                            case 6: CLEAN choise = 6;  break;
                             default: CLEAN break;
                         }
-                    } while (choise != 4);
+                    } while (choise != 6);
                 }
                 else {
                     do {
