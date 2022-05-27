@@ -132,3 +132,45 @@ unsigned select(MYSQL *connect, char *given_NiceName, char resultatModele[][10],
 
 	return retour;
 }
+
+/**
+ * Select les infos du modele donnee
+ *
+ * \param connexion (MYSQL *) connextion a la base de donnee
+ * \param name (char *) nom du modele recherchee
+ * \param modele(char []) un tableau contenant les 4 infos de modele 
+ * \param erreur (char *) garnie si une erreur survient
+ * 
+ * \return (unsigned) 1 si la creation a ete effectue avec succes sinon 0
+ */
+unsigned selectModele(MYSQL *connexion, char *name, char modele[][20], char *erreur) {
+    MYSQL_ROW row;
+    MYSQL_RES *results; 
+    char query[255];
+    sprintf(query, "SELECT * FROM Modele WHERE niceName = '%s'", name);
+    
+    if (mysql_query(connexion, query) != 0) {
+        strcpy(erreur, "ERREUR: Impossible de faire la selection de la table modele\n");
+        return 0;
+    }
+
+    results = mysql_store_result(connexion);
+
+    if (results == NULL) {
+        strcpy(erreur, "ERREUR: Impossible de recevoir la table modele\n");
+        mysql_free_result(results);
+        return 0;
+    }
+
+    while ((row = mysql_fetch_row(results))){
+        strcpy(&(modele[0][0]),row[0]);
+        strcpy(&(modele[1][0]),row[1]);
+        strcpy(&(modele[2][0]),row[2]);
+        strcpy(&(modele[3][0]),row[3]);
+    }
+
+    mysql_free_result(results);
+
+    return 1;
+}
+

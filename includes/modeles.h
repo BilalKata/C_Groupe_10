@@ -7,5 +7,6 @@ unsigned createTableModeles(MYSQL *connect, char *erreur);
 unsigned insertModeles(MYSQL *connect, char *id, char *name, char *niceName, char *makeId, char *erreur);
 unsigned ajoutDesModeles(MYSQL *connect, char *chemin, char *erreur);
 unsigned select(MYSQL *connect, char *given_NiceName,char resultatModele[][10],char *erreur);
+unsigned selectModele(MYSQL *connexion, char *name, char modele[][20], char *erreur);
 
 #endif
