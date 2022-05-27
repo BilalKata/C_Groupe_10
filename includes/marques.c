@@ -199,7 +199,7 @@ unsigned selectMarque(MYSQL *connexion, char *name, char marque[][20], char *err
  * 
  * \return (unsigned) 1 si la creation a ete effectue avec succes sinon 0
  */
-unsigned selectMarque(MYSQL *connexion, char *id, char marque[][20], char *erreur) {
+unsigned selectMarqueId(MYSQL *connexion, char *id, char marque[][20], char *erreur) {
     MYSQL_ROW row;
     MYSQL_RES *results; 
     char query[QUERY_LENGTH];
