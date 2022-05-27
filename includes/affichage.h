@@ -24,5 +24,7 @@ unsigned delete_user(char *username, char *erreur);
 unsigned make_admin(char *erreur);
 void init(MYSQL *connexion, char *erreur);
 void reset(MYSQL *connexion);
-
+void afficher_marques(MYSQL *connexion, char *erreur);
+void afficher_modeles(MYSQL *connexion, char *erreur);
+void afficher_versions(MYSQL *connexion, char *erreur);
 #endif
