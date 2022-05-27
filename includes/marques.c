@@ -106,7 +106,7 @@ unsigned addMarques(MYSQL* connexion, char *path, char *erreur) {
 }
 
 /**
- * Insere la marque donnee dans la bd
+ * Select les marques dans bd
  *
  * \param connexion (MYSQL *) connextion a la base de donnee
  * \param marques (Marque []) un tableau de marque 
@@ -146,5 +146,45 @@ unsigned selectMarques(MYSQL *connexion, Marque marques[], unsigned *nbr_element
     *nbr_element = i;
 
     mysql_free_result(results);
+    return 1;
+}
+
+/**
+ * Select les infos de la marque donnee
+ *
+ * \param connexion (MYSQL *) connextion a la base de donnee
+ * \param name (char *) nom de la marque recherchee
+ * \param marques(char []) un contenant les 3 infos de marque 
+ * \param erreur (char *) garnie si une erreur survient
+ * 
+ * \return (unsigned) 1 si la creation a ete effectue avec succes sinon 0
+ */
+unsigned selectMarque(MYSQL *connexion, char *name, char marque[][20], char *erreur) {
+    MYSQL_ROW row;
+    MYSQL_RES *results; 
+    char query[QUERY_LENGTH];
+    sprintf(query, "SELECT * FROM Marque WHERE niceName = '%s'", name);
+    
+    if (mysql_query(connexion, query) != 0) {
+        strcpy(erreur, "ERREUR: Impossible de faire la selection de la table marque\n");
+        return 0;
+    }
+
+    results = mysql_store_result(connexion);
+
+    if (results == NULL) {
+        strcpy(erreur, "ERREUR: Impossible de recevoir la table marque\n");
+        mysql_free_result(results);
+        return 0;
+    }
+
+    while ((row = mysql_fetch_row(results))){
+        strcpy(&(marque[0][0]),row[0]);
+        strcpy(&(marque[1][0]),row[1]);
+        strcpy(&(marque[2][0]),row[2]);
+    }
+
+    mysql_free_result(results);
+
     return 1;
 }
