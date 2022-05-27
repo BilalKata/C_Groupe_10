@@ -42,7 +42,9 @@ unsigned menu_admin(void){
     printf("  1.Afficher les utilisateurs\n");
     printf("  2.Supprimer un utilisateurs\n");
     printf("  3.Passer un user en administrateur\n");
-    printf("  4.Se deconnecter\n\n");
+    printf("  4.Initialiser la BDD\n");
+    printf("  5.Supprimer les donnees\n");
+    printf("  6.Se deconnecter\n\n");
     printf("   >  ");
     scanf("%d", &response);
     return response;
@@ -156,4 +158,48 @@ unsigned make_admin(char *erreur) {
     scanf("%s", username);
     if (makeUserAdmin(username, PATH, erreur) == 1) return 1;
     return 0;
+}
+
+void init(MYSQL *connexion, char *erreur) {
+    if (createTableMarque(connexion, erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    if (createTableModeles(connexion, erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    if (createTableVersion(connexion, erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    if (addMarques(connexion, "../ressources/marques_modeles.txt", erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    if (ajoutDesModeles(connexion, "../ressources/marques_modeles.txt", erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+    if (addVersions(connexion, "../ressources/versions_moteurs.txt", erreur) == 0) {
+        fprintf(stderr, "%s", erreur);
+        exit(1);
+    }
+}
+
+void reset(MYSQL *connexion) {
+    if (mysql_query(connexion, "DROP TABLE IF EXISTS Version") != 0) {
+        fprintf(stderr, "ERREUR: Impossible de supprimer la table Version");
+        exit(1);
+    }
+    
+    if (mysql_query(connexion, "DROP TABLE IF EXISTS Modele") != 0) {
+        fprintf(stderr, "ERREUR: Impossible de supprimer la table Modele");
+        exit(1);
+    }
+    
+    if (mysql_query(connexion, "DROP TABLE IF EXISTS Marque") != 0) {
+        fprintf(stderr, "ERREUR: Impossible de supprimer la table Marque");
+        exit(1);
+    }
 }
