@@ -162,30 +162,12 @@ unsigned make_admin(char *erreur) {
 }
 
 void init(MYSQL *connexion, char *erreur) {
-    if (createTableMarque(connexion, erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
-    if (createTableModeles(connexion, erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
-    if (createTableVersion(connexion, erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
-    if (addMarques(connexion, "../ressources/marques_modeles.txt", erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
-    if (ajoutDesModeles(connexion, "../ressources/marques_modeles.txt", erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
-    if (addVersions(connexion, "../ressources/versions_moteurs.txt", erreur) == 0) {
-        fprintf(stderr, "%s", erreur);
-        exit(1);
-    }
+    createTableMarque(connexion, erreur);
+    createTableModeles(connexion, erreur);
+    createTableVersion(connexion, erreur);
+    addMarques(connexion, "../ressources/marques_modeles.txt", erreur);
+    ajoutDesModeles(connexion, "../ressources/marques_modeles.txt", erreur);
+    addVersions(connexion, "../ressources/versions_moteurs.txt", erreur);
 }
 
 void reset(MYSQL *connexion) {
@@ -203,6 +185,7 @@ void reset(MYSQL *connexion) {
         fprintf(stderr, "ERREUR: Impossible de supprimer la table Marque");
         exit(1);
     }
+}
 void afficher_marques(MYSQL *connexion, char *erreur) {
     unsigned nbr_marques = 40;
     char c;
@@ -222,6 +205,7 @@ void afficher_marques(MYSQL *connexion, char *erreur) {
         free(marques[i].name);
         free(marques[i].niceName);
     }
+    printf("=======================================\n");
     fflush(stdin);
     c = getchar();
 }
@@ -231,6 +215,7 @@ void afficher_modeles(MYSQL *connexion, char *erreur) {
     unsigned nbr_modeles = 40;
     char resultatModele[50][10];
     char marque[10];
+    char marques[3][20];
     printf("Entrez le nom de la marque(en minuscule): \n> ");
     scanf("%s", &marque);
     char c;
@@ -242,11 +227,13 @@ void afficher_modeles(MYSQL *connexion, char *erreur) {
         fflush(stdin);
         c = getchar();
     }else{
-        printf("Il y a %d modele(s) de la marque %s\n", nbr_modeles, marque);
-
+        printf("Il y a %d modele(s) de la marque: \n", nbr_modeles);
+        selectMarque(connexion, marque, marques, erreur);
+        printf("ID: %s NAME: %s NICENAME: %s\n", marques[0], marques[1], marques[2]);
+        printf("Nom des modeles:\n");
         for (i = 0; i < nbr_modeles; i++)
         {
-            printf(">%s\n", &resultatModele[i][0]);
+            printf("> %10s\n", &resultatModele[i][0]);
         }
         printf("=======================================\n");
         fflush(stdin);
@@ -258,9 +245,11 @@ void afficher_versions(MYSQL *connexion, char *erreur){
     char c;
     unsigned nbr_versions = 40;
     char version[3][2][50];
-    char marque[50]="à definir";
     char modele[50];
+    char modeles[4][20];
+    char marques[3][20];
     int i = 0;
+
 
     printf("Entrez le nom du modele(en minuscule): \n> ");
     scanf("%s", &modele);
@@ -270,13 +259,19 @@ void afficher_versions(MYSQL *connexion, char *erreur){
         fflush(stdin);
         c = getchar();
     }else{
-        printf("--------- Liste des modeles ---------\n");
+        selectModele(connexion, modele, modeles, erreur);
+        selectMarqueId(connexion, modeles[3], marques, erreur);
+        printf("--------- Liste des versions ---------\n");
         printf("=====================================\n");
-        printf("Il y a %d version(s) du modele(%s) %s\n", nbr_versions, modele, marque);
+        printf("MARQUE\tID: %s NAME: %s NICENAME: %s\n", marques[0], marques[1], marques[2]);
+        printf("MODELE\tID: %s NAME: %s NICENAME: %s MAKEID: %s\n", modeles[0], modeles[1], modeles[2], modeles[3]);
+        printf("Il y a %d version(s): \n", nbr_versions);
+        printf(" Puissance moteur  |   Nom de version\n");
+        printf("-------------------------------------\n");
 
         for (i = 0; i < nbr_versions; i++)
         {
-            printf(">%s >%s\n", &version[i][0], &version[i][1]);
+            printf("        %s        | %s\n", &version[i][1], &version[i][0]);
         }
         printf("=======================================\n");
         fflush(stdin);
