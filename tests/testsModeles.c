@@ -10,6 +10,7 @@
 char erreur[250];
 char resultatModele[50][10];
  MYSQL *connect;
+int nbElement;
 
 void setup(){
     connect = connexion_bd(HOSTNAME, USERNAME, PASSWORD, DB_NAME, erreur);
@@ -64,13 +65,13 @@ void test_succes(void){
 void test_select_success(void){
     createTableModeles(connect,erreur);
     ajoutDesModeles(connect,"../ressources/marques_modeles.txt",erreur);
-    TEST_ASSERT_EQUAL_UINT(1,select(connect,"audi",resultatModele,erreur));
+    TEST_ASSERT_EQUAL_UINT(1,select(connect,"audi",resultatModele,&nbElement,erreur));
 }
 
 void test_select_fail(void){
     createTableModeles(connect,erreur);
     ajoutDesModeles(connect,"../ressources/marques_modeles.txt",erreur);
-    TEST_ASSERT_EQUAL_UINT(0,select(connect,"esfe",resultatModele,erreur));
+    TEST_ASSERT_EQUAL_UINT(0,select(connect,"esfe",resultatModele,&nbElement,erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvaise entree",erreur);
 }
 
