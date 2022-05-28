@@ -6,6 +6,10 @@
 static char erreur[255];
 char password[]="atome";
 char path[]= "../ressources/usersTest.txt";
+static char uncrypted_password[]="atome"; 
+static char current_username[]="mainUser"; 
+static char new_username[]="toto"; 
+static char wrong_password[]="wrong";
 
 void setup(){
     strcpy(erreur, "");
@@ -16,8 +20,6 @@ void setup(){
     fprintf(file, "1 %s                    %s                    \n", "admin", "RFj^`@");
     fprintf(file, "1 %s                    %s                    \n", "root", "RFj^`@");
     fprintf(file, "0 %s                    %s                    \n", "mainUser", "RFj^`@");
-    //fprintf(file, "0 %s %s                                  \n", "", "");
-    //fprintf(file, "0 %s %s                                  \n", "", "");
     fclose(file);
 }
 
@@ -60,53 +62,52 @@ void cryptPassword_users(void){
 
 void updateUser_succes(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(1, updateUsername("mainUser","atome", "../ressources/usersTest.txt","toto",erreur));
-    printf("%s", erreur);
+    TEST_ASSERT_EQUAL_UINT(1, updateUsername(current_username, uncrypted_password, path, new_username, erreur));
 }
 
 void updateUser_failPassword(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(2, updateUsername("mainUser","123456", "ressources/usersTest.txt","test3",erreur));
+    TEST_ASSERT_EQUAL_UINT(2, updateUsername(current_username,wrong_password, path, new_username, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais mot de passe", erreur);
 }
 
 void updateUser_failUsedName(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(4, updateUsername("test2","test", "ressources/usersTest.txt","admin",erreur));
+    TEST_ASSERT_EQUAL_UINT(4, updateUsername("test2","test", path,"admin",erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Nom d'utilisateur deja pris", erreur);
 }
 
 void updatePassword_succes(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(1, updatePassword("mainUser","123", "ressources/usersTest.txt","test2",erreur));
+    TEST_ASSERT_EQUAL_UINT(1, updatePassword(current_username, uncrypted_password, path, wrong_password, erreur));
 }
 
 void updatePassword_failPassword(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(2, updatePassword("mainUser","qsdqsd", "ressources/usersTest.txt","ldqmldqs",erreur));
+    TEST_ASSERT_EQUAL_UINT(2, updatePassword(current_username,wrong_password, path, uncrypted_password,erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais mot de passe", erreur);
 }
 
 void deleteUser_succes(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(1, deleteUser("mainUser",  "ressources/usersTest.txt", erreur));
+    TEST_ASSERT_EQUAL_UINT(1, deleteUser("mainUser",  path, erreur));
 
 }
 
 void authUser_succes(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(1, authenticateUser("mainUser", "123", "ressources/usersTest.txt", erreur));
+    TEST_ASSERT_EQUAL_UINT(1, authenticateUser(current_username, uncrypted_password, path, erreur));
 }
 
 void authUser_failPassword(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(2, authenticateUser("mainUser", "hjdsdkq",  "ressources/usersTest.txt", erreur));
+    TEST_ASSERT_EQUAL_UINT(2, authenticateUser(current_username, wrong_password, path, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais identifiant de connexion", erreur);
 }
 
 void authUser_failUsername(void){
     setup();
-    TEST_ASSERT_EQUAL_UINT(3, authenticateUser("mainUser1", "123",  "ressources/usersTest.txt", erreur));
+    TEST_ASSERT_EQUAL_UINT(3, authenticateUser("mainUser1", "123",  path, erreur));
     TEST_ASSERT_EQUAL_STRING("ERREUR: Mauvais identifiant de connexion", erreur);
 }
 

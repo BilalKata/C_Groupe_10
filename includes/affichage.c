@@ -217,7 +217,7 @@ void afficher_modeles(MYSQL *connexion, char *erreur) {
     char marque[10];
     char marques[3][20];
     printf("Entrez le nom de la marque(en minuscule): \n> ");
-    scanf("%s", &marque);
+    scanf("%s", marque);
     char c;
     int i=0;
     printf("--------- Liste des modeles ---------\n");
@@ -252,7 +252,7 @@ void afficher_versions(MYSQL *connexion, char *erreur){
 
 
     printf("Entrez le nom du modele(en minuscule): \n> ");
-    scanf("%s", &modele);
+    scanf("%s", modele);
     
     if (selectByNiceNameOrdered(connexion, version, &nbr_versions, modele, erreur) == 0){
         fprintf(stderr, "%s, Merci de recommencer!", erreur);
