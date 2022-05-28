@@ -6,8 +6,6 @@ data
 mod.*
 
 #general
-bin
-.vscode
 .env
 docker-compose.yml
 
@@ -43,7 +41,6 @@ docker-compose.yml
 *.dylib
 
 # Executables
-*.exe
 *.out
 *.app
 *.i*86

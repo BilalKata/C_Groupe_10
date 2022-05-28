@@ -1,0 +1,85 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "Compiler projet",
+      "command": "C:/msys64/mingw64/bin/gcc.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "main.c",
+        "../includes/*.c",
+        "-o",
+        "${workspaceFolder}/bin/main.exe",
+        "-isystem",
+        "C:/Program Files/MariaDB/MariaDB Connector C 64-bit/include/",
+        "-L",
+        "C:/Program Files/MariaDB/MariaDB Connector C 64-bit/lib/",
+        "-l",
+        "libmariadb"
+
+      
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "type": "cppbuild",
+      "label": "Compiler tests",
+      "command": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${file}",
+        "..\\unity\\*.c",
+        "..\\includes\\*.c",
+        "-o",
+        "${workspaceFolder}\\bin\\${fileBasenameNoExtension}",
+        "-isystem",
+        "C:/Program Files/MariaDB/MariaDB Connector C 64-bit/include/",
+        "-L",
+        "C:/Program Files/MariaDB/MariaDB Connector C 64-bit/lib/",
+        "-l",
+        "libmariadb"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": [
+        "$gcc"
+      ],
+      "group": "build"
+    },
+    {
+      "type": "process",
+      "label": "Executer le projet",
+      "command": "./bin/main.exe",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "type": "process",
+      "label": "Executer les tests",
+      "command": "${fileBasenameNoExtension}.exe",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}/bin"
+      },
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+    "files.associations": {
+        "json.h": "c",
+        "users.h": "c",
+        "unity.h": "c",
+        "connexion.h": "c",
+        "authentificate.C": "cpp",
+        "versions.h": "c"
+    },
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "php-2022",
+            "database": "php-projet2022",
+            "username": "root",
+            "password": ""
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "c",
+            "database": "voiture",
+            "username": "root",
+            "password": ""
+        }
+    ]
+}
