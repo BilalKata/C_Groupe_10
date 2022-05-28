@@ -13,6 +13,8 @@ static char wrong_password[]="wrong";
 
 void setup(){
     strcpy(erreur, "");
+    strcpy(uncrypted_password, "atome");
+    strcpy(wrong_password, "wrong");
 
     // RESET du fichier
     FILE *file= fopen(path, "w");
